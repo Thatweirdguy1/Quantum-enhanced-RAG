@@ -1,0 +1,210 @@
+{
+  "provenance": {
+    "git_commit": "92b3c0c",
+    "python": "3.13.14",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "numpy": "2.4.3"
+  },
+  "counts": {
+    "PASS": 16,
+    "FAIL": 0,
+    "WARN": 0,
+    "N/A": 8
+  },
+  "strict": false,
+  "exit": 0,
+  "checks": [
+    {
+      "id": "SEC-1",
+      "title": "No secrets in tracked files",
+      "source": "sec-prompts #1 (Gitleaks)",
+      "status": "PASS",
+      "detail": "scanned 30 tracked text files against 10 credential shapes; none matched",
+      "evidence": []
+    },
+    {
+      "id": "SEC-2",
+      "title": ".gitignore covers secrets and generated binaries",
+      "source": "sec-prompts #1 / prototype-vs-production item 2, item 6",
+      "status": "PASS",
+      "detail": "all 5 required patterns present",
+      "evidence": []
+    },
+    {
+      "id": "SEC-3",
+      "title": ".env.example exists and holds no live values",
+      "source": "sec-prompts #1 / prototype-vs-production item 2",
+      "status": "PASS",
+      "detail": "17 documented variables",
+      "evidence": []
+    },
+    {
+      "id": "SEC-4",
+      "title": "Configuration is env-var driven with no embedded defaults for secrets",
+      "source": "sec-prompts #3 / prototype-vs-production item 2",
+      "status": "PASS",
+      "detail": "config.py reads the environment (10 accessor calls) and require_env fails fast on an unset variable",
+      "evidence": []
+    },
+    {
+      "id": "SEC-5",
+      "title": "Logs redact credentials and never store raw queries",
+      "source": "sec-prompts #2 (personal data flow)",
+      "status": "PASS",
+      "detail": "credentials and emails redacted in emitted records; queries appear only as salted digests (e.g. 6b0ac026ee75)",
+      "evidence": []
+    },
+    {
+      "id": "SEC-6",
+      "title": "No debug artefacts left in shipped code",
+      "source": "sec-prompts #3 / prototype-vs-production item 7",
+      "status": "PASS",
+      "detail": "no breakpoints, tracebacks-to-caller, or debug flags",
+      "evidence": []
+    },
+    {
+      "id": "SEC-7",
+      "title": "Resource ceilings refuse oversized allocations",
+      "source": "sec-prompts #5 (feature abuse) / prototype-vs-production item 8",
+      "status": "PASS",
+      "detail": "all 5 allocation paths refuse above 22q (simulation) / 20q (enumeration)",
+      "evidence": []
+    },
+    {
+      "id": "SEC-8",
+      "title": "Untrusted input is validated, not trusted",
+      "source": "sec-prompts #4 (input validation)",
+      "status": "PASS",
+      "detail": "5 malformed inputs refused; zero-width and Unicode-Tags characters stripped before use",
+      "evidence": []
+    },
+    {
+      "id": "SEC-9",
+      "title": "Cache filenames cannot escape the cache directory",
+      "source": "sec-prompts #4 (file handling) / #5 (ID manipulation)",
+      "status": "PASS",
+      "detail": "6 traversal attempts all resolve inside cache/",
+      "evidence": []
+    },
+    {
+      "id": "SEC-10",
+      "title": "Indirect prompt injection is detected and spotlighted",
+      "source": "sec-prompts #5 (content injection) / OWASP LLM01",
+      "status": "PASS",
+      "detail": "3/3 payloads flagged; context is numbered, delimited and preceded by a data-not-instructions preamble. Note: detection of *fluent* poisoning is 0% by design -- see SEC-11.",
+      "evidence": []
+    },
+    {
+      "id": "SEC-11",
+      "title": "Detector blind spot on fluent poisoning is measured, not hidden",
+      "source": "sec-prompts #5 (attacker's perspective)",
+      "status": "PASS",
+      "detail": "instruction-injection 100% detected, topical-mimicry 0%. The second number is the honest one: fluent contradiction carries no pattern, so retrieval-level defence (QAOA redundancy) is what must be measured against it.",
+      "evidence": []
+    },
+    {
+      "id": "PROD-1",
+      "title": "No large binaries staged for git",
+      "source": "prototype-vs-production item 2, item 6",
+      "status": "PASS",
+      "detail": "31 tracked files, 1.56 MB total; embeddings and corpora are regenerated, not committed",
+      "evidence": []
+    },
+    {
+      "id": "PROD-2",
+      "title": "Errors are typed and carry no internals to the caller",
+      "source": "sec-prompts #3 / prototype-vs-production item 4",
+      "status": "PASS",
+      "detail": "typed hierarchy under SecurityError; refusal message ('query is 99999 characters, limit is 2000'...) carries no path or traceback",
+      "evidence": []
+    },
+    {
+      "id": "PROD-3",
+      "title": "Runs are seeded and results are traceable to a config",
+      "source": "prototype-vs-production item 7 (testing/QA)",
+      "status": "PASS",
+      "detail": "5 result file(s), every section seeded; each embeds the config or the commit that produced it",
+      "evidence": []
+    },
+    {
+      "id": "PROD-4",
+      "title": "Dependencies are pinned",
+      "source": "prototype-vs-production item 6",
+      "status": "PASS",
+      "detail": "all 17 requirements carry a version constraint",
+      "evidence": []
+    },
+    {
+      "id": "PROD-5",
+      "title": "Demo API hardening verified against live responses",
+      "source": "sec-prompts #3 (pre-deploy audit)",
+      "status": "PASS",
+      "detail": "7 controls verified live: 6 headers present on a live response; /healthz returns status only; 2 explicit origin(s), no wildcard; valid body reaches the handler (503); size cap refuses 99KB with 413; field bounds refuse with 422; rate limit fires at the configured ceiling ([200, 200, 429, 429]); error bodies carry a correlation id and no internals",
+      "evidence": []
+    },
+    {
+      "id": "NA-1",
+      "title": "Password hashing (bcrypt/argon2)",
+      "source": "sec-prompts #2, #4",
+      "status": "N/A",
+      "detail": "No user accounts exist. The pipeline has no authentication surface because it stores no user records and issues no sessions.",
+      "evidence": []
+    },
+    {
+      "id": "NA-2",
+      "title": "IDOR / per-user authorisation on every route",
+      "source": "sec-prompts #4, #5",
+      "status": "N/A",
+      "detail": "There are no per-user resources. Every document in the corpus is public BEIR data with identical read permissions.",
+      "evidence": []
+    },
+    {
+      "id": "NA-3",
+      "title": "Payment webhook signature verification",
+      "source": "sec-prompts #4",
+      "status": "N/A",
+      "detail": "No payment or billing path.",
+      "evidence": []
+    },
+    {
+      "id": "NA-4",
+      "title": "Server-side price recalculation",
+      "source": "sec-prompts #4",
+      "status": "N/A",
+      "detail": "No commerce logic; nothing is priced.",
+      "evidence": []
+    },
+    {
+      "id": "NA-5",
+      "title": "Row-level security / tenant isolation",
+      "source": "prototype-vs-production item 3",
+      "status": "N/A",
+      "detail": "Single-tenant research corpus, read-only, no database.",
+      "evidence": []
+    },
+    {
+      "id": "NA-6",
+      "title": "Password-reset token lifetime and single use",
+      "source": "sec-prompts #4",
+      "status": "N/A",
+      "detail": "No credential recovery flow, because there are no credentials.",
+      "evidence": []
+    },
+    {
+      "id": "NA-7",
+      "title": "GDPR data-deletion request handling",
+      "source": "prototype-vs-production item 10",
+      "status": "N/A",
+      "detail": "No personal data is collected. Queries are held in memory for the duration of a request and recorded in logs only as salted digests, so there is no per-subject record to delete.",
+      "evidence": []
+    },
+    {
+      "id": "NA-8",
+      "title": "Cookie flags (HttpOnly/Secure/SameSite)",
+      "source": "sec-prompts #2, #3",
+      "status": "N/A",
+      "detail": "The demo API is stateless and sets no cookies; it authenticates with a bearer token when QRAG_ENV=production.",
+      "evidence": []
+    }
+  ]
+}

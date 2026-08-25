@@ -1,0 +1,33 @@
+{
+  "provenance": {
+    "git_commit": "92b3c0c",
+    "python": "3.13.14",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "numpy": "2.4.3"
+  },
+  "tests": {
+    "command": "python -m pytest tests -q",
+    "exit": 0,
+    "summary": "68 passed, 1 warning in 4.41s",
+    "counts": {
+      "passed": 68
+    },
+    "passed": 68,
+    "failed": 0
+  },
+  "audit": {
+    "command": "python -m scripts.security_audit",
+    "exit": 0,
+    "counts": {
+      "PASS": 16,
+      "FAIL": 0,
+      "WARN": 0,
+      "N/A": 8
+    },
+    "passed": 16,
+    "failed": 0,
+    "warned": 0,
+    "not_applicable": 8
+  },
+  "all_clean": true
+}

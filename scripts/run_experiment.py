@@ -48,6 +48,7 @@ from qrag.embed import build_embedder
 from qrag.kernel import PhaseKernel
 from qrag.metrics import EvalReport, compare_reports, format_comparison
 from qrag.pipeline import BaselineRAG, QRAG, build_indexes
+from qrag.provenance import snapshot as provenance_snapshot
 from qrag.security import configure_logging
 
 LOG = configure_logging()
@@ -267,32 +268,33 @@ def run_poison_arm(bench: Bench, embedder, args, clean_means: dict) -> dict:
             "context_detector": context_scan,
             "quantum": report.extras.get("quantum", {}),
         }
-        _checkpoint({"poisoned_partial": out}, args.out.replace(".json", "_poison.json"))
+        _checkpoint({"poisoned_partial": out},
+                    args.out.replace(".json", "_poison.json"), bench.cfg)
     return out
 
 
 # --------------------------------------------------------------------- reporting
-def _checkpoint(payload: dict, path: str) -> None:
+def _checkpoint(payload: dict, path: str, cfg: Config | None = None) -> None:
+    """Write an intermediate or final result file.
+
+    Every result file carries its provenance, including the partial ones. A
+    checkpoint that records metrics but not the configuration that produced them is
+    a file whose numbers cannot be traced back to a run, and ``security_audit.py``
+    check PROD-3 flags exactly that -- it caught the poisoned-arm checkpoint being
+    written bare, which is what this parameter fixes.
+    """
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    if cfg is not None and "provenance" not in payload:
+        payload = {"provenance": _provenance(cfg), "config": cfg.to_dict(),
+                   "partial": True, **payload}
     (RESULTS_DIR / path).write_text(
         json.dumps(payload, indent=2, default=str), encoding="utf8")
 
 
 def _provenance(cfg: Config) -> dict:
-    try:
-        commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"],
-                                capture_output=True, text=True, timeout=10)
-        head = commit.stdout.strip() if commit.returncode == 0 else "not-a-git-repo"
-    except (OSError, subprocess.SubprocessError):
-        head = "unavailable"
-    return {
-        "config_hash": cfg.hash(),
-        "git_commit": head,
-        "python": sys.version.split()[0],
-        "platform": platform.platform(),
-        "numpy": np.__version__,
-        "seed": cfg.eval.seed,
-    }
+    # Code and platform identity is shared with the other result writers; the config
+    # hash and seed are what make an *experiment* result reproducible on top of it.
+    return {"config_hash": cfg.hash(), **provenance_snapshot(), "seed": cfg.eval.seed}
 
 
 def print_summary(reports: dict[str, EvalReport], comparisons: dict) -> None:
@@ -348,10 +350,20 @@ def print_poison_summary(poison: dict) -> None:
           f"queries; families: {', '.join(man['families'])}")
     det = man.get("detector", {})
     if det:
+        # detector_report returns {family: {n, flagged, by_severity, detection_rate}}.
+        # An earlier version of this printer looked for 'flagged_fraction' and
+        # 'by_family', found neither, and so reported "0.0% flagged overall" while
+        # silently printing no per-family lines at all -- with the real rate being
+        # 100/400. That is the precise failure SECURITY.md forbids: an aggregate that
+        # hides which families the detector misses. Derive both from the real shape.
+        total = sum(v["n"] for v in det.values())
+        flagged = sum(v["flagged"] for v in det.values())
         print(f"pattern detector on injected text: "
-              f"{det.get('flagged_fraction', 0)*100:.1f}% flagged overall")
-        for family, rate in (det.get("by_family") or {}).items():
-            print(f"    {family:<24} {rate*100:>5.1f}% flagged")
+              f"{flagged}/{total} = {flagged / max(total, 1) * 100:.1f}% flagged "
+              f"overall -- read the per-family rows, not this number")
+        for family, stats in det.items():
+            print(f"    {family:<24} {stats['detection_rate'] * 100:>5.1f}% flagged "
+                  f"({stats['flagged']}/{stats['n']})")
     print(f"\n{'system':<22}{'ctx occupancy':>15}{'clean ctx':>12}"
           f"{'top10 hit':>12}{'1st adv rank':>14}{'ndcg@10':>10}")
     print("-" * 92)

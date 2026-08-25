@@ -45,7 +45,13 @@ def _fmt(value, places: int = 4) -> str:
 
 
 def _signed(value, places: int = 4) -> str:
-    return "n/a" if value is None else f"{value:+.{places}f}"
+    # NaN reaches here when a poisoned-arm system has no counterpart in the clean
+    # grid, so there is no clean run to subtract. Printing "+nan" in a report table
+    # reads as a computation that went wrong rather than a quantity that is not
+    # defined, so say which it is.
+    if value is None or (isinstance(value, float) and value != value):
+        return "n/a"
+    return f"{value:+.{places}f}"
 
 
 def section_provenance(exp: dict) -> list[str]:
@@ -164,6 +170,25 @@ def section_ablation(exp: dict) -> list[str]:
         lat = m.get("latency_ms_mean")
         out.append(f"| `{label}` | " + " | ".join(row) + f" | {_fmt(lat, 1)} |")
     out.append("")
+
+    # Whether Grover moved the ranking at all is a fact the table above contains but
+    # does not say. Stating it stops the oracle-query result in section 5 from being
+    # read as a retrieval result.
+    grover = exp["clean"].get("qrag[grover]", {}).get("metrics", {})
+    base = exp["clean"]["classical-baseline"]["metrics"]
+    shared = [k for k in base if k.startswith(("recall@", "ndcg@", "mrr@"))]
+    if grover and all(abs(grover.get(k, 0.0) - base[k]) < 1e-12 for k in shared):
+        out += [
+            "**`qrag[grover]` scores identically to the baseline on every retrieval "
+            "metric, to floating point.** That is not a coincidence and not a bug: "
+            "amplitude amplification here selects from a shortlist that has already "
+            "been scored classically, and the ordering it returns is the classical "
+            "ordering. Grover in this pipeline demonstrates an oracle-query "
+            "complexity property on a real workload and contributes nothing to "
+            "ranking quality. Any document presenting it as a retrieval improvement "
+            "is misreporting this table.",
+            "",
+        ]
     return out
 
 
@@ -183,8 +208,8 @@ def section_significance(exp: dict) -> list[str]:
             if not isinstance(c, dict) or "delta" not in c:
                 continue
             out.append(
-                f"| `{label}` | {metric} | {_fmt(c['baseline'])} | "
-                f"{_fmt(c['system'])} | {_signed(c['delta'])} | "
+                f"| `{label}` | {metric} | {_fmt(c['baseline_mean'])} | "
+                f"{_fmt(c['system_mean'])} | {_signed(c['delta'])} | "
                 f"[{_signed(c['ci95_low'])}, {_signed(c['ci95_high'])}] | "
                 f"{_fmt(c['p_value'])} | {_fmt(c['significant'])} |")
     out.append("")
@@ -323,18 +348,27 @@ def section_poison(exp: dict) -> list[str]:
 
     det = man.get("detector") or {}
     if det:
+        # {family: {n, flagged, by_severity, detection_rate}}. The overall figure is
+        # derived rather than read, and is printed *after* the per-family table on
+        # purpose: quoting it alone is the reporting failure section 9 prohibits.
+        total = sum(v["n"] for v in det.values())
+        flagged = sum(v["flagged"] for v in det.values())
         out += ["", "### Pattern detector on the injected text", "",
-                f"Overall flagged: **{det.get('flagged_fraction', 0) * 100:.1f}%**.",
-                "", "| family | flagged |", "|---|---|"]
-        for family, rate in (det.get("by_family") or {}).items():
-            out.append(f"| {family} | {rate * 100:.1f}% |")
+                "| family | flagged | n |", "|---|---|---|"]
+        for family, stats in det.items():
+            out.append(f"| {family} | {stats['detection_rate'] * 100:.1f}% | "
+                       f"{stats['flagged']}/{stats['n']} |")
         out += [
             "",
-            "**The 0% row is the honest one and must be quoted alongside the 100%",
+            f"Overall: {flagged}/{total} = "
+            f"{flagged / max(total, 1) * 100:.1f}%.",
+            "",
+            "**The 0% rows are the honest ones and must be quoted alongside the 100%",
             "row.** Fluent text that simply contradicts the scientific claim carries",
             "no detectable pattern, because it was written to look exactly like a",
             "real abstract. A regex layer does not defend against corpus poisoning,",
-            "and the aggregate figure would hide that.",
+            "and the aggregate figure hides precisely that: three of the four",
+            "families evade it completely.",
             "",
         ]
 

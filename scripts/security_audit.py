@@ -31,6 +31,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
+from qrag.provenance import snapshot as provenance_snapshot  # noqa: E402
+
 # Files that legitimately contain secret-shaped strings: the scanner's own
 # patterns, the audit's own test fixtures, and the env template.
 SCANNER_ALLOWLIST = {"qrag/security.py", "scripts/security_audit.py", ".env.example"}
@@ -522,17 +524,34 @@ def check_reproducibility() -> Check:
         return c
     # Parse the JSON rather than substring-scanning a prefix: `config` sits well
     # past any fixed cut-off in a file that embeds full training histories.
-    missing_cfg = []
+    #
+    # Traceability, not the literal presence of a `config` key, is what this check is
+    # for. An experiment result is traceable via the config hash and seed that
+    # reproduce it. A verification artefact -- the test and audit counts -- has no
+    # retrieval config to hash, and demanding one would mean either exempting it or
+    # writing a meaningless config block into it. It is traceable if it records the
+    # commit and interpreter it ran against, so accept either.
+    #
+    # A file carrying neither is still flagged, which is the case that matters: it
+    # caught the poisoned-arm checkpoint being written as a bare metrics dump.
+    untraceable = []
     for p in jsons:
         try:
-            if "config" not in json.loads(p.read_text(encoding="utf8")):
-                missing_cfg.append(p.name)
+            doc = json.loads(p.read_text(encoding="utf8"))
         except (OSError, json.JSONDecodeError):
-            missing_cfg.append(f"{p.name} (unreadable)")
+            untraceable.append(f"{p.name} (unreadable)")
+            continue
+        if "config" in doc:
+            continue
+        prov = doc.get("provenance") or {}
+        if isinstance(prov, dict) and prov.get("git_commit"):
+            continue
+        untraceable.append(p.name)
     c.detail = (f"{len(jsons)} result file(s), every section seeded"
-                + (f"; without an embedded config: {missing_cfg}" if missing_cfg else
-                   "; each embeds the config that produced it"))
-    if missing_cfg:
+                + (f"; not traceable to a config or a commit: {untraceable}"
+                   if untraceable else
+                   "; each embeds the config or the commit that produced it"))
+    if untraceable:
         c.status = "WARN"
     return c
 
@@ -739,17 +758,27 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--json", action="store_true", help="machine-readable output")
     ap.add_argument("--strict", action="store_true", help="treat WARN as failure")
+    ap.add_argument("--out", type=Path, default=None,
+                    help="also write the machine-readable result here, so that "
+                         "documents can read the counts instead of quoting them "
+                         "from a terminal scrollback that may be stale")
     args = ap.parse_args()
 
     checks = run_all()
     counts = {s: sum(1 for c in checks if c.status == s)
               for s in ("PASS", "FAIL", "WARN", "N/A")}
     failed = counts["FAIL"] + (counts["WARN"] if args.strict else 0)
+    payload = {"provenance": provenance_snapshot(),
+               "counts": counts, "strict": args.strict,
+               "exit": 1 if failed else 0,
+               "checks": [c.as_dict() for c in checks]}
+
+    if args.out:
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(json.dumps(payload, indent=2), encoding="utf8")
 
     if args.json:
-        print(json.dumps({"counts": counts, "strict": args.strict,
-                          "exit": 1 if failed else 0,
-                          "checks": [c.as_dict() for c in checks]}, indent=2))
+        print(json.dumps(payload, indent=2))
         return 1 if failed else 0
 
     glyph = {"PASS": "PASS", "FAIL": "FAIL", "WARN": "WARN", "N/A": "n/a "}
