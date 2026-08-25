@@ -25,8 +25,8 @@ early morning, ahead of the 07:25 cutoff.
 |---|---|---|---|
 | 1 | Source-of-truth facts file | `FACTS.md`, `scripts/build_facts.py`, `docs/facts.py` | **done, pushed** |
 | 2 | README + SECURITY | `README.md`, `SECURITY.md` | **done, pushed** |
-| 3 | Daily diary DOCX | `docs/daily_diary.md` -> `build/Q-RAG_Daily_Diary.docx` | next |
-| 4 | 10-slide PPTX | `docs/slides.py` -> `build/Q-RAG_Slides.pptx` | not started |
+| 3 | Daily diary DOCX | `docs/daily_diary.md` -> `build/Q-RAG_Daily_Diary.docx` | **done, pushed** (61 facts substituted, ~4 pages) |
+| 4 | 10-slide PPTX | `docs/slides.py` -> `build/Q-RAG_Slides.pptx` | next |
 | 5 | Research paper DOCX | `docs/research_paper.md` -> `build/Q-RAG_Research_Paper.docx` | not started |
 | 6 | Literature review DOCX | `docs/literature_review.md` -> `build/Q-RAG_Literature_Review.docx` | prose complete, renders at ~24 est. pages; commit last per the agreed order |
 

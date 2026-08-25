@@ -40,20 +40,30 @@ WORDS_PER_PAGE = 36 * 13
 
 
 def estimate_pages(markdown: str) -> tuple[int, int]:
-    """Rough (words, pages) for a Markdown source, excluding markup lines."""
+    """Rough (words, pages) for a Markdown source.
+
+    Table rows are counted for their text as well as their row overhead. An earlier
+    version skipped ``|`` lines entirely, which reported a table-heavy document as
+    three pages when nearly all of its prose lived in table cells.
+    """
     words = 0
-    tables = 0
+    rows = 0
     for line in markdown.splitlines():
         s = line.strip()
-        if s.startswith("|"):
-            tables += 1
+        if not s or s.startswith(("[[", "---", "```")):
             continue
-        if s.startswith(("[[", "---")) or ":" in s[:20] and s.startswith("title"):
+        if s.startswith("|"):
+            # A separator row (|---|---|) carries no text.
+            if set(s) <= set("|-: "):
+                continue
+            rows += 1
+            words += len(s.replace("|", " ").split())
             continue
         words += len(s.split())
-    # A table row occupies about a line regardless of its word count, and headings
-    # plus their space-before cost roughly a line each.
-    return words, max(1, round(words / WORDS_PER_PAGE + tables / 36 + 0.5))
+    # A row costs at least a line even when its cells are short, and headings plus
+    # their space-before cost roughly a line each.
+    lines_from_text = words / 13
+    return words, max(1, round((lines_from_text + rows * 0.4) / 36 + 0.5))
 
 
 def main(argv: list[str]) -> int:

@@ -51,10 +51,12 @@ def _load(name: str) -> dict:
     return json.loads(path.read_text(encoding="utf8"))
 
 
-# Identifiers, not quantities. A seed printed as "20,260,720" cannot be pasted back
-# into a command line, and a thousands separator in a year or a hash is noise.
+# Identifiers and conventional dimensionless counts, not quantities. A seed printed
+# as "20,260,720" cannot be pasted back into a command line, a thousands separator in
+# a year or a hash is noise, and an embedding dimension is conventionally written
+# 1024 rather than 1,024. A corpus size is a quantity and does take the separator.
 BARE = {"seed", "config_hash", "python", "numpy", "platform", "dataset",
-        "embed_dim", "n_docs"}
+        "embed_dim"}
 
 
 class Facts:
