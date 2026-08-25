@@ -24,8 +24,8 @@ early morning, ahead of the 07:25 cutoff.
 | # | Deliverable | Path | State |
 |---|---|---|---|
 | 1 | Source-of-truth facts file | `FACTS.md`, `scripts/build_facts.py`, `docs/facts.py` | **done, pushed** |
-| 2 | README + SECURITY | `README.md`, `SECURITY.md` | next |
-| 3 | Daily diary DOCX | `docs/daily_diary.md` -> `build/Q-RAG_Daily_Diary.docx` | not started |
+| 2 | README + SECURITY | `README.md`, `SECURITY.md` | **done, pushed** |
+| 3 | Daily diary DOCX | `docs/daily_diary.md` -> `build/Q-RAG_Daily_Diary.docx` | next |
 | 4 | 10-slide PPTX | `docs/slides.py` -> `build/Q-RAG_Slides.pptx` | not started |
 | 5 | Research paper DOCX | `docs/research_paper.md` -> `build/Q-RAG_Research_Paper.docx` | not started |
 | 6 | Literature review DOCX | `docs/literature_review.md` -> `build/Q-RAG_Literature_Review.docx` | prose complete, renders at ~24 est. pages; commit last per the agreed order |
@@ -55,9 +55,13 @@ early morning, ahead of the 07:25 cutoff.
    The verification artefacts have no retrieval config to hash. The check now accepts
    a config hash *or* a git commit, and still flags a file carrying neither — which
    is the case that caught the checkpoint.
-3. **README claims "one cell of 35" significance comparisons. The real number is
+3. **README claimed "one cell of 35" significance comparisons; the real number is
    30** (6 systems x 5 metrics), which the `sig.total` token computes from the
-   results file. Fix belongs to deliverable 2.
+   results file. Fixed in deliverable 2, along with two more stale figures the
+   sweep caught: README said the pipeline was 31x slower (30.7x) and attributed
+   the whole pipeline's 1,191 ms/query to the QAOA stage alone (1,122 ms/query);
+   SECURITY.md still carried the long-superseded "~90x slower" and a stale
+   tracked-file count.
 4. Provenance was duplicated across result writers; it is now one shared
    `qrag/provenance.py`.
 

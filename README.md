@@ -9,12 +9,17 @@ that each stage can be shown to be *doing nothing* if that is the truth.
 
 > **Honest summary up front.** This project simulates quantum circuits on a
 > classical machine with numpy and qiskit-aer. It cannot and does not claim a
-> speed-up: the full pipeline is roughly **90× slower** than its own classical
-> baseline. What it can legitimately measure is (a) whether the quantum-inspired
-> scoring function *reorders* results and whether that reordering *helps*, (b)
-> **oracle-query complexity** for Grover, which is a hardware-independent quantity,
-> and (c) whether QAOA's redundancy penalty suppresses clusters of adversarially
-> injected passages. Where a result is negative, it is reported as negative.
+> speed-up: the full pipeline is **30.7× slower** than its own classical baseline.
+> And on the headline question it set out to answer, the result is **negative** —
+> across 300 SciFact queries and seven system configurations, no quantum arm beats
+> the tuned classical baseline on nDCG@10 with a confidence interval excluding zero.
+> What the experiments *do* establish is (a) that the kernel reorders results and
+> that the reordering is not an improvement at corpus scale, (b) a **4.64× reduction
+> in oracle queries** for Grover, which is a hardware-independent quantity, and (c)
+> that QAOA's redundancy penalty **cuts adversarial context occupancy from 0.984 to
+> 0.796** on a poisoned corpus. Where a result is negative, it is reported as
+> negative — see [FACTS.md](FACTS.md), which is generated from the result files and
+> ends with a list of claims this project may not make.
 
 ---
 
@@ -59,6 +64,43 @@ The Gate B margin is small: **+1.5 points of top-1 on 137 validation pairs is ab
 two queries.** It is not statistically significant and is not presented as such.
 
 ---
+
+## What the experiments measured
+
+Full detail, generated from `results/*.json`, is in [FACTS.md](FACTS.md). The four
+results worth stating here:
+
+**1. Retrieval quality: null.** 300 queries, 7 configurations, paired bootstrap with
+2,000 resamples. Every nDCG@10 delta against the tuned baseline lies within ±0.002
+and none is significant. One cell of 30 reaches p < 0.05 (`qrag[kernel]` recall@5,
++0.0173) and with 30 comparisons that is what noise looks like — it is not claimed as
+a finding. The kernel passed both pre-registered gates on held-out pairs and then
+did not transfer to the full corpus. That is the result.
+
+**2. Grover: 4.64× fewer oracle queries, 8.98× simulation overhead.** Both numbers
+are reported in adjacent columns because the first is a complexity property and the
+second is what simulating it costs. `qrag[grover]` scores *identically* to the
+baseline on every retrieval metric to floating point — amplitude amplification here
+selects from an already-scored shortlist and returns the classical ordering, so it
+contributes nothing to ranking quality and is not presented as if it does.
+
+**3. QAOA: 0.9978 mean solution quality, exact optimum on 78.7% of queries** against
+brute force over the same feasible set, at 1,122 ms/query for the QAOA stage alone
+(1,191 ms/query for the whole pipeline). It is the most expensive stage by a factor
+of thirty and buys no retrieval gain on a clean corpus.
+
+**4. Security: the one positive result, and it is narrow.** On a corpus poisoned with
+400 passages across four attack families, adversarial context occupancy falls from
+**0.984** (`qrag[no-qaoa]`) to **0.796** (`qrag[full]`) — a 0.188 reduction
+attributable to the redundancy penalty, isolated by an ablation that differs in that
+term alone. The honest framing matters: 0.796 is still catastrophic. Every one of
+the 50 targeted queries was hit, no query received a clean context, and the pattern
+detector caught **100% of instruction-injection and 0% of the other three families**.
+QAOA measurably reduced the attacker's yield and did not come close to defeating the
+attack.
+
+---
+
 
 ## Setup
 
@@ -215,6 +257,6 @@ results/           measured numbers, tracked in git so tables can be checked
 300 test queries, 339 relevance judgments. Public research data under its own
 licence. Downloaded on first use.
 
-SciFact has a strong lexical baseline (nDCG@10 ≈ 0.84 for the tuned hybrid), which
-leaves little headroom. That makes it a hard place to show an improvement and an
-honest place to look for one.
+SciFact has a strong lexical baseline — a tuned hybrid reaches **recall@10 = 0.841
+and nDCG@10 = 0.715** here — which leaves little headroom. That makes it a hard place
+to show an improvement and an honest place to look for one.
