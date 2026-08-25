@@ -40610,5 +40610,1493 @@
         "system_mean": 0.6907339744146227
       }
     }
+  },
+  "poisoned": {
+    "manifest": {
+      "dataset": "scifact/test",
+      "n_target_queries": 50,
+      "per_query_per_family": 2,
+      "families": [
+        "topical-mimicry",
+        "lexical-gaming",
+        "embedding-optimised",
+        "instruction-injection"
+      ],
+      "seed": 20260720,
+      "n_injected": 400,
+      "injected_by_family": {
+        "topical-mimicry": 100,
+        "lexical-gaming": 100,
+        "embedding-optimised": 100,
+        "instruction-injection": 100
+      },
+      "targets": {
+        "5": [
+          "adv-topical-mimicry-5-0",
+          "adv-topical-mimicry-5-1",
+          "adv-lexical-gaming-5-0",
+          "adv-lexical-gaming-5-1",
+          "adv-embedding-optimised-5-0",
+          "adv-embedding-optimised-5-1",
+          "adv-instruction-injection-5-0",
+          "adv-instruction-injection-5-1"
+        ],
+        "53": [
+          "adv-topical-mimicry-53-0",
+          "adv-topical-mimicry-53-1",
+          "adv-lexical-gaming-53-0",
+          "adv-lexical-gaming-53-1",
+          "adv-embedding-optimised-53-0",
+          "adv-embedding-optimised-53-1",
+          "adv-instruction-injection-53-0",
+          "adv-instruction-injection-53-1"
+        ],
+        "72": [
+          "adv-topical-mimicry-72-0",
+          "adv-topical-mimicry-72-1",
+          "adv-lexical-gaming-72-0",
+          "adv-lexical-gaming-72-1",
+          "adv-embedding-optimised-72-0",
+          "adv-embedding-optimised-72-1",
+          "adv-instruction-injection-72-0",
+          "adv-instruction-injection-72-1"
+        ],
+        "75": [
+          "adv-topical-mimicry-75-0",
+          "adv-topical-mimicry-75-1",
+          "adv-lexical-gaming-75-0",
+          "adv-lexical-gaming-75-1",
+          "adv-embedding-optimised-75-0",
+          "adv-embedding-optimised-75-1",
+          "adv-instruction-injection-75-0",
+          "adv-instruction-injection-75-1"
+        ],
+        "113": [
+          "adv-topical-mimicry-113-0",
+          "adv-topical-mimicry-113-1",
+          "adv-lexical-gaming-113-0",
+          "adv-lexical-gaming-113-1",
+          "adv-embedding-optimised-113-0",
+          "adv-embedding-optimised-113-1",
+          "adv-instruction-injection-113-0",
+          "adv-instruction-injection-113-1"
+        ],
+        "216": [
+          "adv-topical-mimicry-216-0",
+          "adv-topical-mimicry-216-1",
+          "adv-lexical-gaming-216-0",
+          "adv-lexical-gaming-216-1",
+          "adv-embedding-optimised-216-0",
+          "adv-embedding-optimised-216-1",
+          "adv-instruction-injection-216-0",
+          "adv-instruction-injection-216-1"
+        ],
+        "232": [
+          "adv-topical-mimicry-232-0",
+          "adv-topical-mimicry-232-1",
+          "adv-lexical-gaming-232-0",
+          "adv-lexical-gaming-232-1",
+          "adv-embedding-optimised-232-0",
+          "adv-embedding-optimised-232-1",
+          "adv-instruction-injection-232-0",
+          "adv-instruction-injection-232-1"
+        ],
+        "269": [
+          "adv-topical-mimicry-269-0",
+          "adv-topical-mimicry-269-1",
+          "adv-lexical-gaming-269-0",
+          "adv-lexical-gaming-269-1",
+          "adv-embedding-optimised-269-0",
+          "adv-embedding-optimised-269-1",
+          "adv-instruction-injection-269-0",
+          "adv-instruction-injection-269-1"
+        ],
+        "314": [
+          "adv-topical-mimicry-314-0",
+          "adv-topical-mimicry-314-1",
+          "adv-lexical-gaming-314-0",
+          "adv-lexical-gaming-314-1",
+          "adv-embedding-optimised-314-0",
+          "adv-embedding-optimised-314-1",
+          "adv-instruction-injection-314-0",
+          "adv-instruction-injection-314-1"
+        ],
+        "362": [
+          "adv-topical-mimicry-362-0",
+          "adv-topical-mimicry-362-1",
+          "adv-lexical-gaming-362-0",
+          "adv-lexical-gaming-362-1",
+          "adv-embedding-optimised-362-0",
+          "adv-embedding-optimised-362-1",
+          "adv-instruction-injection-362-0",
+          "adv-instruction-injection-362-1"
+        ],
+        "399": [
+          "adv-topical-mimicry-399-0",
+          "adv-topical-mimicry-399-1",
+          "adv-lexical-gaming-399-0",
+          "adv-lexical-gaming-399-1",
+          "adv-embedding-optimised-399-0",
+          "adv-embedding-optimised-399-1",
+          "adv-instruction-injection-399-0",
+          "adv-instruction-injection-399-1"
+        ],
+        "411": [
+          "adv-topical-mimicry-411-0",
+          "adv-topical-mimicry-411-1",
+          "adv-lexical-gaming-411-0",
+          "adv-lexical-gaming-411-1",
+          "adv-embedding-optimised-411-0",
+          "adv-embedding-optimised-411-1",
+          "adv-instruction-injection-411-0",
+          "adv-instruction-injection-411-1"
+        ],
+        "452": [
+          "adv-topical-mimicry-452-0",
+          "adv-topical-mimicry-452-1",
+          "adv-lexical-gaming-452-0",
+          "adv-lexical-gaming-452-1",
+          "adv-embedding-optimised-452-0",
+          "adv-embedding-optimised-452-1",
+          "adv-instruction-injection-452-0",
+          "adv-instruction-injection-452-1"
+        ],
+        "501": [
+          "adv-topical-mimicry-501-0",
+          "adv-topical-mimicry-501-1",
+          "adv-lexical-gaming-501-0",
+          "adv-lexical-gaming-501-1",
+          "adv-embedding-optimised-501-0",
+          "adv-embedding-optimised-501-1",
+          "adv-instruction-injection-501-0",
+          "adv-instruction-injection-501-1"
+        ],
+        "508": [
+          "adv-topical-mimicry-508-0",
+          "adv-topical-mimicry-508-1",
+          "adv-lexical-gaming-508-0",
+          "adv-lexical-gaming-508-1",
+          "adv-embedding-optimised-508-0",
+          "adv-embedding-optimised-508-1",
+          "adv-instruction-injection-508-0",
+          "adv-instruction-injection-508-1"
+        ],
+        "513": [
+          "adv-topical-mimicry-513-0",
+          "adv-topical-mimicry-513-1",
+          "adv-lexical-gaming-513-0",
+          "adv-lexical-gaming-513-1",
+          "adv-embedding-optimised-513-0",
+          "adv-embedding-optimised-513-1",
+          "adv-instruction-injection-513-0",
+          "adv-instruction-injection-513-1"
+        ],
+        "539": [
+          "adv-topical-mimicry-539-0",
+          "adv-topical-mimicry-539-1",
+          "adv-lexical-gaming-539-0",
+          "adv-lexical-gaming-539-1",
+          "adv-embedding-optimised-539-0",
+          "adv-embedding-optimised-539-1",
+          "adv-instruction-injection-539-0",
+          "adv-instruction-injection-539-1"
+        ],
+        "551": [
+          "adv-topical-mimicry-551-0",
+          "adv-topical-mimicry-551-1",
+          "adv-lexical-gaming-551-0",
+          "adv-lexical-gaming-551-1",
+          "adv-embedding-optimised-551-0",
+          "adv-embedding-optimised-551-1",
+          "adv-instruction-injection-551-0",
+          "adv-instruction-injection-551-1"
+        ],
+        "569": [
+          "adv-topical-mimicry-569-0",
+          "adv-topical-mimicry-569-1",
+          "adv-lexical-gaming-569-0",
+          "adv-lexical-gaming-569-1",
+          "adv-embedding-optimised-569-0",
+          "adv-embedding-optimised-569-1",
+          "adv-instruction-injection-569-0",
+          "adv-instruction-injection-569-1"
+        ],
+        "577": [
+          "adv-topical-mimicry-577-0",
+          "adv-topical-mimicry-577-1",
+          "adv-lexical-gaming-577-0",
+          "adv-lexical-gaming-577-1",
+          "adv-embedding-optimised-577-0",
+          "adv-embedding-optimised-577-1",
+          "adv-instruction-injection-577-0",
+          "adv-instruction-injection-577-1"
+        ],
+        "589": [
+          "adv-topical-mimicry-589-0",
+          "adv-topical-mimicry-589-1",
+          "adv-lexical-gaming-589-0",
+          "adv-lexical-gaming-589-1",
+          "adv-embedding-optimised-589-0",
+          "adv-embedding-optimised-589-1",
+          "adv-instruction-injection-589-0",
+          "adv-instruction-injection-589-1"
+        ],
+        "690": [
+          "adv-topical-mimicry-690-0",
+          "adv-topical-mimicry-690-1",
+          "adv-lexical-gaming-690-0",
+          "adv-lexical-gaming-690-1",
+          "adv-embedding-optimised-690-0",
+          "adv-embedding-optimised-690-1",
+          "adv-instruction-injection-690-0",
+          "adv-instruction-injection-690-1"
+        ],
+        "700": [
+          "adv-topical-mimicry-700-0",
+          "adv-topical-mimicry-700-1",
+          "adv-lexical-gaming-700-0",
+          "adv-lexical-gaming-700-1",
+          "adv-embedding-optimised-700-0",
+          "adv-embedding-optimised-700-1",
+          "adv-instruction-injection-700-0",
+          "adv-instruction-injection-700-1"
+        ],
+        "715": [
+          "adv-topical-mimicry-715-0",
+          "adv-topical-mimicry-715-1",
+          "adv-lexical-gaming-715-0",
+          "adv-lexical-gaming-715-1",
+          "adv-embedding-optimised-715-0",
+          "adv-embedding-optimised-715-1",
+          "adv-instruction-injection-715-0",
+          "adv-instruction-injection-715-1"
+        ],
+        "721": [
+          "adv-topical-mimicry-721-0",
+          "adv-topical-mimicry-721-1",
+          "adv-lexical-gaming-721-0",
+          "adv-lexical-gaming-721-1",
+          "adv-embedding-optimised-721-0",
+          "adv-embedding-optimised-721-1",
+          "adv-instruction-injection-721-0",
+          "adv-instruction-injection-721-1"
+        ],
+        "727": [
+          "adv-topical-mimicry-727-0",
+          "adv-topical-mimicry-727-1",
+          "adv-lexical-gaming-727-0",
+          "adv-lexical-gaming-727-1",
+          "adv-embedding-optimised-727-0",
+          "adv-embedding-optimised-727-1",
+          "adv-instruction-injection-727-0",
+          "adv-instruction-injection-727-1"
+        ],
+        "729": [
+          "adv-topical-mimicry-729-0",
+          "adv-topical-mimicry-729-1",
+          "adv-lexical-gaming-729-0",
+          "adv-lexical-gaming-729-1",
+          "adv-embedding-optimised-729-0",
+          "adv-embedding-optimised-729-1",
+          "adv-instruction-injection-729-0",
+          "adv-instruction-injection-729-1"
+        ],
+        "743": [
+          "adv-topical-mimicry-743-0",
+          "adv-topical-mimicry-743-1",
+          "adv-lexical-gaming-743-0",
+          "adv-lexical-gaming-743-1",
+          "adv-embedding-optimised-743-0",
+          "adv-embedding-optimised-743-1",
+          "adv-instruction-injection-743-0",
+          "adv-instruction-injection-743-1"
+        ],
+        "793": [
+          "adv-topical-mimicry-793-0",
+          "adv-topical-mimicry-793-1",
+          "adv-lexical-gaming-793-0",
+          "adv-lexical-gaming-793-1",
+          "adv-embedding-optimised-793-0",
+          "adv-embedding-optimised-793-1",
+          "adv-instruction-injection-793-0",
+          "adv-instruction-injection-793-1"
+        ],
+        "823": [
+          "adv-topical-mimicry-823-0",
+          "adv-topical-mimicry-823-1",
+          "adv-lexical-gaming-823-0",
+          "adv-lexical-gaming-823-1",
+          "adv-embedding-optimised-823-0",
+          "adv-embedding-optimised-823-1",
+          "adv-instruction-injection-823-0",
+          "adv-instruction-injection-823-1"
+        ],
+        "834": [
+          "adv-topical-mimicry-834-0",
+          "adv-topical-mimicry-834-1",
+          "adv-lexical-gaming-834-0",
+          "adv-lexical-gaming-834-1",
+          "adv-embedding-optimised-834-0",
+          "adv-embedding-optimised-834-1",
+          "adv-instruction-injection-834-0",
+          "adv-instruction-injection-834-1"
+        ],
+        "839": [
+          "adv-topical-mimicry-839-0",
+          "adv-topical-mimicry-839-1",
+          "adv-lexical-gaming-839-0",
+          "adv-lexical-gaming-839-1",
+          "adv-embedding-optimised-839-0",
+          "adv-embedding-optimised-839-1",
+          "adv-instruction-injection-839-0",
+          "adv-instruction-injection-839-1"
+        ],
+        "880": [
+          "adv-topical-mimicry-880-0",
+          "adv-topical-mimicry-880-1",
+          "adv-lexical-gaming-880-0",
+          "adv-lexical-gaming-880-1",
+          "adv-embedding-optimised-880-0",
+          "adv-embedding-optimised-880-1",
+          "adv-instruction-injection-880-0",
+          "adv-instruction-injection-880-1"
+        ],
+        "956": [
+          "adv-topical-mimicry-956-0",
+          "adv-topical-mimicry-956-1",
+          "adv-lexical-gaming-956-0",
+          "adv-lexical-gaming-956-1",
+          "adv-embedding-optimised-956-0",
+          "adv-embedding-optimised-956-1",
+          "adv-instruction-injection-956-0",
+          "adv-instruction-injection-956-1"
+        ],
+        "985": [
+          "adv-topical-mimicry-985-0",
+          "adv-topical-mimicry-985-1",
+          "adv-lexical-gaming-985-0",
+          "adv-lexical-gaming-985-1",
+          "adv-embedding-optimised-985-0",
+          "adv-embedding-optimised-985-1",
+          "adv-instruction-injection-985-0",
+          "adv-instruction-injection-985-1"
+        ],
+        "1021": [
+          "adv-topical-mimicry-1021-0",
+          "adv-topical-mimicry-1021-1",
+          "adv-lexical-gaming-1021-0",
+          "adv-lexical-gaming-1021-1",
+          "adv-embedding-optimised-1021-0",
+          "adv-embedding-optimised-1021-1",
+          "adv-instruction-injection-1021-0",
+          "adv-instruction-injection-1021-1"
+        ],
+        "1062": [
+          "adv-topical-mimicry-1062-0",
+          "adv-topical-mimicry-1062-1",
+          "adv-lexical-gaming-1062-0",
+          "adv-lexical-gaming-1062-1",
+          "adv-embedding-optimised-1062-0",
+          "adv-embedding-optimised-1062-1",
+          "adv-instruction-injection-1062-0",
+          "adv-instruction-injection-1062-1"
+        ],
+        "1086": [
+          "adv-topical-mimicry-1086-0",
+          "adv-topical-mimicry-1086-1",
+          "adv-lexical-gaming-1086-0",
+          "adv-lexical-gaming-1086-1",
+          "adv-embedding-optimised-1086-0",
+          "adv-embedding-optimised-1086-1",
+          "adv-instruction-injection-1086-0",
+          "adv-instruction-injection-1086-1"
+        ],
+        "1100": [
+          "adv-topical-mimicry-1100-0",
+          "adv-topical-mimicry-1100-1",
+          "adv-lexical-gaming-1100-0",
+          "adv-lexical-gaming-1100-1",
+          "adv-embedding-optimised-1100-0",
+          "adv-embedding-optimised-1100-1",
+          "adv-instruction-injection-1100-0",
+          "adv-instruction-injection-1100-1"
+        ],
+        "1110": [
+          "adv-topical-mimicry-1110-0",
+          "adv-topical-mimicry-1110-1",
+          "adv-lexical-gaming-1110-0",
+          "adv-lexical-gaming-1110-1",
+          "adv-embedding-optimised-1110-0",
+          "adv-embedding-optimised-1110-1",
+          "adv-instruction-injection-1110-0",
+          "adv-instruction-injection-1110-1"
+        ],
+        "1140": [
+          "adv-topical-mimicry-1140-0",
+          "adv-topical-mimicry-1140-1",
+          "adv-lexical-gaming-1140-0",
+          "adv-lexical-gaming-1140-1",
+          "adv-embedding-optimised-1140-0",
+          "adv-embedding-optimised-1140-1",
+          "adv-instruction-injection-1140-0",
+          "adv-instruction-injection-1140-1"
+        ],
+        "1179": [
+          "adv-topical-mimicry-1179-0",
+          "adv-topical-mimicry-1179-1",
+          "adv-lexical-gaming-1179-0",
+          "adv-lexical-gaming-1179-1",
+          "adv-embedding-optimised-1179-0",
+          "adv-embedding-optimised-1179-1",
+          "adv-instruction-injection-1179-0",
+          "adv-instruction-injection-1179-1"
+        ],
+        "1204": [
+          "adv-topical-mimicry-1204-0",
+          "adv-topical-mimicry-1204-1",
+          "adv-lexical-gaming-1204-0",
+          "adv-lexical-gaming-1204-1",
+          "adv-embedding-optimised-1204-0",
+          "adv-embedding-optimised-1204-1",
+          "adv-instruction-injection-1204-0",
+          "adv-instruction-injection-1204-1"
+        ],
+        "1279": [
+          "adv-topical-mimicry-1279-0",
+          "adv-topical-mimicry-1279-1",
+          "adv-lexical-gaming-1279-0",
+          "adv-lexical-gaming-1279-1",
+          "adv-embedding-optimised-1279-0",
+          "adv-embedding-optimised-1279-1",
+          "adv-instruction-injection-1279-0",
+          "adv-instruction-injection-1279-1"
+        ],
+        "1292": [
+          "adv-topical-mimicry-1292-0",
+          "adv-topical-mimicry-1292-1",
+          "adv-lexical-gaming-1292-0",
+          "adv-lexical-gaming-1292-1",
+          "adv-embedding-optimised-1292-0",
+          "adv-embedding-optimised-1292-1",
+          "adv-instruction-injection-1292-0",
+          "adv-instruction-injection-1292-1"
+        ],
+        "1303": [
+          "adv-topical-mimicry-1303-0",
+          "adv-topical-mimicry-1303-1",
+          "adv-lexical-gaming-1303-0",
+          "adv-lexical-gaming-1303-1",
+          "adv-embedding-optimised-1303-0",
+          "adv-embedding-optimised-1303-1",
+          "adv-instruction-injection-1303-0",
+          "adv-instruction-injection-1303-1"
+        ],
+        "1319": [
+          "adv-topical-mimicry-1319-0",
+          "adv-topical-mimicry-1319-1",
+          "adv-lexical-gaming-1319-0",
+          "adv-lexical-gaming-1319-1",
+          "adv-embedding-optimised-1319-0",
+          "adv-embedding-optimised-1319-1",
+          "adv-instruction-injection-1319-0",
+          "adv-instruction-injection-1319-1"
+        ],
+        "1362": [
+          "adv-topical-mimicry-1362-0",
+          "adv-topical-mimicry-1362-1",
+          "adv-lexical-gaming-1362-0",
+          "adv-lexical-gaming-1362-1",
+          "adv-embedding-optimised-1362-0",
+          "adv-embedding-optimised-1362-1",
+          "adv-instruction-injection-1362-0",
+          "adv-instruction-injection-1362-1"
+        ],
+        "1368": [
+          "adv-topical-mimicry-1368-0",
+          "adv-topical-mimicry-1368-1",
+          "adv-lexical-gaming-1368-0",
+          "adv-lexical-gaming-1368-1",
+          "adv-embedding-optimised-1368-0",
+          "adv-embedding-optimised-1368-1",
+          "adv-instruction-injection-1368-0",
+          "adv-instruction-injection-1368-1"
+        ],
+        "1370": [
+          "adv-topical-mimicry-1370-0",
+          "adv-topical-mimicry-1370-1",
+          "adv-lexical-gaming-1370-0",
+          "adv-lexical-gaming-1370-1",
+          "adv-embedding-optimised-1370-0",
+          "adv-embedding-optimised-1370-1",
+          "adv-instruction-injection-1370-0",
+          "adv-instruction-injection-1370-1"
+        ]
+      },
+      "optimisation": {
+        "adv-embedding-optimised-5-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6066438555717468,
+          "cosine_final": 0.623680830001831,
+          "cosine_gain": 0.01703697443008423,
+          "optimised": true
+        },
+        "adv-embedding-optimised-5-1": {
+          "budget_used": 24,
+          "cosine_start": 0.5949702262878418,
+          "cosine_final": 0.6210708022117615,
+          "cosine_gain": 0.026100575923919678,
+          "optimised": true
+        },
+        "adv-embedding-optimised-53-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6403629779815674,
+          "cosine_final": 0.6968294978141785,
+          "cosine_gain": 0.056466519832611084,
+          "optimised": true
+        },
+        "adv-embedding-optimised-53-1": {
+          "budget_used": 24,
+          "cosine_start": 0.5947328805923462,
+          "cosine_final": 0.700942873954773,
+          "cosine_gain": 0.10620999336242676,
+          "optimised": true
+        },
+        "adv-embedding-optimised-72-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6596818566322327,
+          "cosine_final": 0.7008239030838013,
+          "cosine_gain": 0.041142046451568604,
+          "optimised": true
+        },
+        "adv-embedding-optimised-72-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6987265348434448,
+          "cosine_final": 0.7173731327056885,
+          "cosine_gain": 0.018646597862243652,
+          "optimised": true
+        },
+        "adv-embedding-optimised-75-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6191853284835815,
+          "cosine_final": 0.6646192073822021,
+          "cosine_gain": 0.045433878898620605,
+          "optimised": true
+        },
+        "adv-embedding-optimised-75-1": {
+          "budget_used": 24,
+          "cosine_start": 0.5956116914749146,
+          "cosine_final": 0.6680369973182678,
+          "cosine_gain": 0.07242530584335327,
+          "optimised": true
+        },
+        "adv-embedding-optimised-113-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6600159406661987,
+          "cosine_final": 0.7344242930412292,
+          "cosine_gain": 0.07440835237503052,
+          "optimised": true
+        },
+        "adv-embedding-optimised-113-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6359208822250366,
+          "cosine_final": 0.6907981038093567,
+          "cosine_gain": 0.05487722158432007,
+          "optimised": true
+        },
+        "adv-embedding-optimised-216-0": {
+          "budget_used": 24,
+          "cosine_start": 0.4558272361755371,
+          "cosine_final": 0.4777531027793884,
+          "cosine_gain": 0.02192586660385132,
+          "optimised": true
+        },
+        "adv-embedding-optimised-216-1": {
+          "budget_used": 24,
+          "cosine_start": 0.45245087146759033,
+          "cosine_final": 0.4808509349822998,
+          "cosine_gain": 0.028400063514709473,
+          "optimised": true
+        },
+        "adv-embedding-optimised-232-0": {
+          "budget_used": 24,
+          "cosine_start": 0.5361493825912476,
+          "cosine_final": 0.674350380897522,
+          "cosine_gain": 0.13820099830627441,
+          "optimised": true
+        },
+        "adv-embedding-optimised-232-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6673359870910645,
+          "cosine_final": 0.7292589545249939,
+          "cosine_gain": 0.06192296743392944,
+          "optimised": true
+        },
+        "adv-embedding-optimised-269-0": {
+          "budget_used": 24,
+          "cosine_start": 0.5886720418930054,
+          "cosine_final": 0.7219157218933105,
+          "cosine_gain": 0.13324368000030518,
+          "optimised": true
+        },
+        "adv-embedding-optimised-269-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6868731379508972,
+          "cosine_final": 0.7339630126953125,
+          "cosine_gain": 0.04708987474441528,
+          "optimised": true
+        },
+        "adv-embedding-optimised-314-0": {
+          "budget_used": 24,
+          "cosine_start": 0.5339293479919434,
+          "cosine_final": 0.653227686882019,
+          "cosine_gain": 0.11929833889007568,
+          "optimised": true
+        },
+        "adv-embedding-optimised-314-1": {
+          "budget_used": 24,
+          "cosine_start": 0.5880066156387329,
+          "cosine_final": 0.6513350605964661,
+          "cosine_gain": 0.06332844495773315,
+          "optimised": true
+        },
+        "adv-embedding-optimised-362-0": {
+          "budget_used": 24,
+          "cosine_start": 0.5807734727859497,
+          "cosine_final": 0.6947842836380005,
+          "cosine_gain": 0.11401081085205078,
+          "optimised": true
+        },
+        "adv-embedding-optimised-362-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6766072511672974,
+          "cosine_final": 0.6986943483352661,
+          "cosine_gain": 0.02208709716796875,
+          "optimised": true
+        },
+        "adv-embedding-optimised-399-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6334689855575562,
+          "cosine_final": 0.6731236577033997,
+          "cosine_gain": 0.039654672145843506,
+          "optimised": true
+        },
+        "adv-embedding-optimised-399-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6479195356369019,
+          "cosine_final": 0.718984842300415,
+          "cosine_gain": 0.07106530666351318,
+          "optimised": true
+        },
+        "adv-embedding-optimised-411-0": {
+          "budget_used": 24,
+          "cosine_start": 0.598118245601654,
+          "cosine_final": 0.6798839569091797,
+          "cosine_gain": 0.08176571130752563,
+          "optimised": true
+        },
+        "adv-embedding-optimised-411-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6212817430496216,
+          "cosine_final": 0.7041492462158203,
+          "cosine_gain": 0.08286750316619873,
+          "optimised": true
+        },
+        "adv-embedding-optimised-452-0": {
+          "budget_used": 24,
+          "cosine_start": 0.662269115447998,
+          "cosine_final": 0.6983550190925598,
+          "cosine_gain": 0.03608590364456177,
+          "optimised": true
+        },
+        "adv-embedding-optimised-452-1": {
+          "budget_used": 24,
+          "cosine_start": 0.663326621055603,
+          "cosine_final": 0.7106285095214844,
+          "cosine_gain": 0.04730188846588135,
+          "optimised": true
+        },
+        "adv-embedding-optimised-501-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6571292877197266,
+          "cosine_final": 0.6892455816268921,
+          "cosine_gain": 0.03211629390716553,
+          "optimised": true
+        },
+        "adv-embedding-optimised-501-1": {
+          "budget_used": 24,
+          "cosine_start": 0.7294126152992249,
+          "cosine_final": 0.750484824180603,
+          "cosine_gain": 0.021072208881378174,
+          "optimised": true
+        },
+        "adv-embedding-optimised-508-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6379110813140869,
+          "cosine_final": 0.7380971312522888,
+          "cosine_gain": 0.1001860499382019,
+          "optimised": true
+        },
+        "adv-embedding-optimised-508-1": {
+          "budget_used": 24,
+          "cosine_start": 0.7079228162765503,
+          "cosine_final": 0.7560212016105652,
+          "cosine_gain": 0.04809838533401489,
+          "optimised": true
+        },
+        "adv-embedding-optimised-513-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6783745288848877,
+          "cosine_final": 0.7632100582122803,
+          "cosine_gain": 0.08483552932739258,
+          "optimised": true
+        },
+        "adv-embedding-optimised-513-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6435933113098145,
+          "cosine_final": 0.7173810601234436,
+          "cosine_gain": 0.07378774881362915,
+          "optimised": true
+        },
+        "adv-embedding-optimised-539-0": {
+          "budget_used": 24,
+          "cosine_start": 0.7742379903793335,
+          "cosine_final": 0.7919785976409912,
+          "cosine_gain": 0.017740607261657715,
+          "optimised": true
+        },
+        "adv-embedding-optimised-539-1": {
+          "budget_used": 24,
+          "cosine_start": 0.7573670744895935,
+          "cosine_final": 0.8014410734176636,
+          "cosine_gain": 0.04407399892807007,
+          "optimised": true
+        },
+        "adv-embedding-optimised-551-0": {
+          "budget_used": 24,
+          "cosine_start": 0.673606276512146,
+          "cosine_final": 0.7479966878890991,
+          "cosine_gain": 0.07439041137695312,
+          "optimised": true
+        },
+        "adv-embedding-optimised-551-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6919534206390381,
+          "cosine_final": 0.7151874303817749,
+          "cosine_gain": 0.023234009742736816,
+          "optimised": true
+        },
+        "adv-embedding-optimised-569-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6615172028541565,
+          "cosine_final": 0.71547931432724,
+          "cosine_gain": 0.053962111473083496,
+          "optimised": true
+        },
+        "adv-embedding-optimised-569-1": {
+          "budget_used": 24,
+          "cosine_start": 0.603129506111145,
+          "cosine_final": 0.685571014881134,
+          "cosine_gain": 0.08244150876998901,
+          "optimised": true
+        },
+        "adv-embedding-optimised-577-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6452701091766357,
+          "cosine_final": 0.7458040714263916,
+          "cosine_gain": 0.10053396224975586,
+          "optimised": true
+        },
+        "adv-embedding-optimised-577-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6600924134254456,
+          "cosine_final": 0.6981650590896606,
+          "cosine_gain": 0.03807264566421509,
+          "optimised": true
+        },
+        "adv-embedding-optimised-589-0": {
+          "budget_used": 24,
+          "cosine_start": 0.7214129567146301,
+          "cosine_final": 0.7754337191581726,
+          "cosine_gain": 0.05402076244354248,
+          "optimised": true
+        },
+        "adv-embedding-optimised-589-1": {
+          "budget_used": 24,
+          "cosine_start": 0.7312734127044678,
+          "cosine_final": 0.7325237989425659,
+          "cosine_gain": 0.0012503862380981445,
+          "optimised": true
+        },
+        "adv-embedding-optimised-690-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6822081804275513,
+          "cosine_final": 0.7173609137535095,
+          "cosine_gain": 0.03515273332595825,
+          "optimised": true
+        },
+        "adv-embedding-optimised-690-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6584596633911133,
+          "cosine_final": 0.719111979007721,
+          "cosine_gain": 0.060652315616607666,
+          "optimised": true
+        },
+        "adv-embedding-optimised-700-0": {
+          "budget_used": 24,
+          "cosine_start": 0.5836432576179504,
+          "cosine_final": 0.67339026927948,
+          "cosine_gain": 0.08974701166152954,
+          "optimised": true
+        },
+        "adv-embedding-optimised-700-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6281155347824097,
+          "cosine_final": 0.6453345417976379,
+          "cosine_gain": 0.01721900701522827,
+          "optimised": true
+        },
+        "adv-embedding-optimised-715-0": {
+          "budget_used": 24,
+          "cosine_start": 0.4824982285499573,
+          "cosine_final": 0.5939227342605591,
+          "cosine_gain": 0.1114245057106018,
+          "optimised": true
+        },
+        "adv-embedding-optimised-715-1": {
+          "budget_used": 24,
+          "cosine_start": 0.5793662071228027,
+          "cosine_final": 0.5991319417953491,
+          "cosine_gain": 0.019765734672546387,
+          "optimised": true
+        },
+        "adv-embedding-optimised-721-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6949735879898071,
+          "cosine_final": 0.7359901666641235,
+          "cosine_gain": 0.041016578674316406,
+          "optimised": true
+        },
+        "adv-embedding-optimised-721-1": {
+          "budget_used": 24,
+          "cosine_start": 0.7585843801498413,
+          "cosine_final": 0.7937307357788086,
+          "cosine_gain": 0.035146355628967285,
+          "optimised": true
+        },
+        "adv-embedding-optimised-727-0": {
+          "budget_used": 24,
+          "cosine_start": 0.5989069938659668,
+          "cosine_final": 0.632125973701477,
+          "cosine_gain": 0.033218979835510254,
+          "optimised": true
+        },
+        "adv-embedding-optimised-727-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6144335865974426,
+          "cosine_final": 0.6390643119812012,
+          "cosine_gain": 0.024630725383758545,
+          "optimised": true
+        },
+        "adv-embedding-optimised-729-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6179051399230957,
+          "cosine_final": 0.7060341835021973,
+          "cosine_gain": 0.08812904357910156,
+          "optimised": true
+        },
+        "adv-embedding-optimised-729-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6916303634643555,
+          "cosine_final": 0.7552439570426941,
+          "cosine_gain": 0.06361359357833862,
+          "optimised": true
+        },
+        "adv-embedding-optimised-743-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6346226930618286,
+          "cosine_final": 0.6780989170074463,
+          "cosine_gain": 0.043476223945617676,
+          "optimised": true
+        },
+        "adv-embedding-optimised-743-1": {
+          "budget_used": 24,
+          "cosine_start": 0.62384033203125,
+          "cosine_final": 0.688718318939209,
+          "cosine_gain": 0.06487798690795898,
+          "optimised": true
+        },
+        "adv-embedding-optimised-793-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6806302070617676,
+          "cosine_final": 0.697152853012085,
+          "cosine_gain": 0.016522645950317383,
+          "optimised": true
+        },
+        "adv-embedding-optimised-793-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6621463298797607,
+          "cosine_final": 0.6962572336196899,
+          "cosine_gain": 0.0341109037399292,
+          "optimised": true
+        },
+        "adv-embedding-optimised-823-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6127628684043884,
+          "cosine_final": 0.6730705499649048,
+          "cosine_gain": 0.06030768156051636,
+          "optimised": true
+        },
+        "adv-embedding-optimised-823-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6016516089439392,
+          "cosine_final": 0.639117956161499,
+          "cosine_gain": 0.037466347217559814,
+          "optimised": true
+        },
+        "adv-embedding-optimised-834-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6259522438049316,
+          "cosine_final": 0.6538275480270386,
+          "cosine_gain": 0.027875304222106934,
+          "optimised": true
+        },
+        "adv-embedding-optimised-834-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6696841716766357,
+          "cosine_final": 0.721795916557312,
+          "cosine_gain": 0.05211174488067627,
+          "optimised": true
+        },
+        "adv-embedding-optimised-839-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6284245252609253,
+          "cosine_final": 0.6888519525527954,
+          "cosine_gain": 0.06042742729187012,
+          "optimised": true
+        },
+        "adv-embedding-optimised-839-1": {
+          "budget_used": 24,
+          "cosine_start": 0.5978891849517822,
+          "cosine_final": 0.704978346824646,
+          "cosine_gain": 0.10708916187286377,
+          "optimised": true
+        },
+        "adv-embedding-optimised-880-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6415671706199646,
+          "cosine_final": 0.6707720756530762,
+          "cosine_gain": 0.029204905033111572,
+          "optimised": true
+        },
+        "adv-embedding-optimised-880-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6536862850189209,
+          "cosine_final": 0.6704540848731995,
+          "cosine_gain": 0.016767799854278564,
+          "optimised": true
+        },
+        "adv-embedding-optimised-956-0": {
+          "budget_used": 24,
+          "cosine_start": 0.623279869556427,
+          "cosine_final": 0.7029004096984863,
+          "cosine_gain": 0.07962054014205933,
+          "optimised": true
+        },
+        "adv-embedding-optimised-956-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6113865971565247,
+          "cosine_final": 0.6535699367523193,
+          "cosine_gain": 0.04218333959579468,
+          "optimised": true
+        },
+        "adv-embedding-optimised-985-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6126489043235779,
+          "cosine_final": 0.6439980268478394,
+          "cosine_gain": 0.031349122524261475,
+          "optimised": true
+        },
+        "adv-embedding-optimised-985-1": {
+          "budget_used": 24,
+          "cosine_start": 0.5951605439186096,
+          "cosine_final": 0.6499598622322083,
+          "cosine_gain": 0.05479931831359863,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1021-0": {
+          "budget_used": 24,
+          "cosine_start": 0.5986602902412415,
+          "cosine_final": 0.6778560876846313,
+          "cosine_gain": 0.07919579744338989,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1021-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6373978853225708,
+          "cosine_final": 0.6669330596923828,
+          "cosine_gain": 0.02953517436981201,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1062-0": {
+          "budget_used": 24,
+          "cosine_start": 0.5743794441223145,
+          "cosine_final": 0.6827256083488464,
+          "cosine_gain": 0.10834616422653198,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1062-1": {
+          "budget_used": 24,
+          "cosine_start": 0.5643827319145203,
+          "cosine_final": 0.672336220741272,
+          "cosine_gain": 0.10795348882675171,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1086-0": {
+          "budget_used": 24,
+          "cosine_start": 0.7027044296264648,
+          "cosine_final": 0.7633553147315979,
+          "cosine_gain": 0.06065088510513306,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1086-1": {
+          "budget_used": 24,
+          "cosine_start": 0.7079561948776245,
+          "cosine_final": 0.7833182215690613,
+          "cosine_gain": 0.07536202669143677,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1100-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6770445108413696,
+          "cosine_final": 0.7174173593521118,
+          "cosine_gain": 0.04037284851074219,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1100-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6833015084266663,
+          "cosine_final": 0.7253564596176147,
+          "cosine_gain": 0.042054951190948486,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1110-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6696822643280029,
+          "cosine_final": 0.6950504779815674,
+          "cosine_gain": 0.025368213653564453,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1110-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6890931129455566,
+          "cosine_final": 0.7131274342536926,
+          "cosine_gain": 0.024034321308135986,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1140-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6851664781570435,
+          "cosine_final": 0.7143803238868713,
+          "cosine_gain": 0.02921384572982788,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1140-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6792675256729126,
+          "cosine_final": 0.7311897277832031,
+          "cosine_gain": 0.05192220211029053,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1179-0": {
+          "budget_used": 24,
+          "cosine_start": 0.5507597327232361,
+          "cosine_final": 0.5926550626754761,
+          "cosine_gain": 0.04189532995223999,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1179-1": {
+          "budget_used": 24,
+          "cosine_start": 0.5396736264228821,
+          "cosine_final": 0.5885031819343567,
+          "cosine_gain": 0.04882955551147461,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1204-0": {
+          "budget_used": 24,
+          "cosine_start": 0.5708526372909546,
+          "cosine_final": 0.6247434020042419,
+          "cosine_gain": 0.053890764713287354,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1204-1": {
+          "budget_used": 24,
+          "cosine_start": 0.5689974427223206,
+          "cosine_final": 0.6184324622154236,
+          "cosine_gain": 0.04943501949310303,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1279-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6015081405639648,
+          "cosine_final": 0.6260033845901489,
+          "cosine_gain": 0.024495244026184082,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1279-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6007070541381836,
+          "cosine_final": 0.6581705808639526,
+          "cosine_gain": 0.05746352672576904,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1292-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6872067451477051,
+          "cosine_final": 0.6969035863876343,
+          "cosine_gain": 0.0096968412399292,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1292-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6713969707489014,
+          "cosine_final": 0.6979928612709045,
+          "cosine_gain": 0.026595890522003174,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1303-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6991713643074036,
+          "cosine_final": 0.7259867787361145,
+          "cosine_gain": 0.026815414428710938,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1303-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6844842433929443,
+          "cosine_final": 0.73194819688797,
+          "cosine_gain": 0.047463953495025635,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1319-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6308053731918335,
+          "cosine_final": 0.7100781202316284,
+          "cosine_gain": 0.07927274703979492,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1319-1": {
+          "budget_used": 24,
+          "cosine_start": 0.5783330798149109,
+          "cosine_final": 0.6579241752624512,
+          "cosine_gain": 0.07959109544754028,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1362-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6649061441421509,
+          "cosine_final": 0.7004801034927368,
+          "cosine_gain": 0.03557395935058594,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1362-1": {
+          "budget_used": 24,
+          "cosine_start": 0.656076192855835,
+          "cosine_final": 0.6869379281997681,
+          "cosine_gain": 0.030861735343933105,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1368-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6804020404815674,
+          "cosine_final": 0.7232211828231812,
+          "cosine_gain": 0.04281914234161377,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1368-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6519233584403992,
+          "cosine_final": 0.6828041076660156,
+          "cosine_gain": 0.030880749225616455,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1370-0": {
+          "budget_used": 24,
+          "cosine_start": 0.6674743890762329,
+          "cosine_final": 0.7419005632400513,
+          "cosine_gain": 0.07442617416381836,
+          "optimised": true
+        },
+        "adv-embedding-optimised-1370-1": {
+          "budget_used": 24,
+          "cosine_start": 0.6748794317245483,
+          "cosine_final": 0.6987313032150269,
+          "cosine_gain": 0.023851871490478516,
+          "optimised": true
+        }
+      },
+      "detector": {
+        "topical-mimicry": {
+          "n": 100,
+          "flagged": 0,
+          "by_severity": {
+            "none": 100
+          },
+          "detection_rate": 0.0
+        },
+        "lexical-gaming": {
+          "n": 100,
+          "flagged": 0,
+          "by_severity": {
+            "none": 100
+          },
+          "detection_rate": 0.0
+        },
+        "embedding-optimised": {
+          "n": 100,
+          "flagged": 0,
+          "by_severity": {
+            "none": 100
+          },
+          "detection_rate": 0.0
+        },
+        "instruction-injection": {
+          "n": 100,
+          "flagged": 100,
+          "by_severity": {
+            "high": 100
+          },
+          "detection_rate": 1.0
+        }
+      }
+    },
+    "systems": {
+      "classical-baseline": {
+        "metrics_poisoned": {
+          "mrr": 0.5565744718244718,
+          "mrr@10": 0.5527063492063492,
+          "ndcg@1": 0.47,
+          "ndcg@10": 0.604009290742258,
+          "ndcg@20": 0.6204575016057444,
+          "ndcg@3": 0.521098384733849,
+          "ndcg@5": 0.5522839717242967,
+          "precision@1": 0.47,
+          "precision@10": 0.08966666666666666,
+          "precision@20": 0.04866666666666666,
+          "precision@3": 0.2033333333333333,
+          "precision@5": 0.1413333333333333,
+          "recall@1": 0.445111111111111,
+          "recall@10": 0.7994444444444444,
+          "recall@20": 0.8602222222222222,
+          "recall@3": 0.5596666666666666,
+          "recall@5": 0.6365555555555555,
+          "latency_ms_mean": 36.73065899994981,
+          "latency_ms_p95": 70.73921499759308
+        },
+        "degradation_vs_clean": {
+          "recall@10": -0.04166666666666663,
+          "ndcg@10": -0.11120352523165244,
+          "mrr@10": -0.13015343915343913
+        },
+        "attack": {
+          "n_attacked_queries": 50,
+          "context_k": 5,
+          "top_k": 10,
+          "context_occupancy": 0.98,
+          "clean_context_rate": 0.0,
+          "top_k_hit_rate": 1.0,
+          "median_first_adv_rank": 1.0,
+          "context_slots_by_family": {
+            "topical-mimicry": 9,
+            "lexical-gaming": 99,
+            "embedding-optimised": 90,
+            "instruction-injection": 47
+          },
+          "context_share_by_family": {
+            "topical-mimicry": 0.036734693877551024,
+            "lexical-gaming": 0.40408163265306124,
+            "embedding-optimised": 0.3673469387755102,
+            "instruction-injection": 0.19183673469387755
+          }
+        },
+        "context_detector": {
+          "n_queries": 300,
+          "flagged_queries": 51,
+          "flagged_rate": 0.17,
+          "worst_severity_counts": {
+            "none": 249,
+            "high": 51
+          }
+        },
+        "quantum": {}
+      },
+      "qrag[no-qaoa]": {
+        "metrics_poisoned": {
+          "mrr": 0.553000172141813,
+          "mrr@10": 0.5494960317460318,
+          "ndcg@1": 0.4666666666666667,
+          "ndcg@10": 0.604710512915333,
+          "ndcg@20": 0.6192273860741689,
+          "ndcg@3": 0.5092027350018827,
+          "ndcg@5": 0.5446549606352571,
+          "precision@1": 0.4666666666666667,
+          "precision@10": 0.09166666666666666,
+          "precision@20": 0.049166666666666664,
+          "precision@3": 0.19777777777777777,
+          "precision@5": 0.14066666666666666,
+          "recall@1": 0.440111111111111,
+          "recall@10": 0.8155555555555556,
+          "recall@20": 0.8702222222222222,
+          "recall@3": 0.5409444444444444,
+          "recall@5": 0.6268333333333334,
+          "latency_ms_mean": 51.18190999996538,
+          "latency_ms_p95": 85.38652999923215
+        },
+        "degradation_vs_clean": {
+          "recall@10": NaN,
+          "ndcg@10": NaN,
+          "mrr@10": NaN
+        },
+        "attack": {
+          "n_attacked_queries": 50,
+          "context_k": 5,
+          "top_k": 10,
+          "context_occupancy": 0.9840000000000001,
+          "clean_context_rate": 0.0,
+          "top_k_hit_rate": 1.0,
+          "median_first_adv_rank": 1.0,
+          "context_slots_by_family": {
+            "topical-mimicry": 8,
+            "lexical-gaming": 99,
+            "embedding-optimised": 88,
+            "instruction-injection": 51
+          },
+          "context_share_by_family": {
+            "topical-mimicry": 0.032520325203252036,
+            "lexical-gaming": 0.4024390243902439,
+            "embedding-optimised": 0.35772357723577236,
+            "instruction-injection": 0.2073170731707317
+          }
+        },
+        "context_detector": {
+          "n_queries": 300,
+          "flagged_queries": 56,
+          "flagged_rate": 0.18666666666666668,
+          "worst_severity_counts": {
+            "none": 244,
+            "high": 56
+          }
+        },
+        "quantum": {
+          "grover": {
+            "n_queries": 300,
+            "n_qubits": 6,
+            "mean_candidates": 64.0,
+            "mean_marked": 13.0,
+            "mean_oracle_queries": 1.0,
+            "mean_classical_expected_queries": 4.642857142857144,
+            "mean_query_reduction_factor": 4.642857142857144,
+            "mean_success_probability": 0.97198486328125,
+            "mean_wall_clock_ms": 0.07124100004148204,
+            "mean_simulation_overhead": 7.984077314931287
+          },
+          "kernel_mode": [
+            "interference-3views"
+          ]
+        }
+      },
+      "qrag[full]": {
+        "metrics_poisoned": {
+          "mrr": 0.5594956026372436,
+          "mrr@10": 0.5544510582010582,
+          "ndcg@1": 0.4666666666666667,
+          "ndcg@10": 0.6059609758954998,
+          "ndcg@20": 0.6251559141192675,
+          "ndcg@3": 0.5092027350018827,
+          "ndcg@5": 0.5730493756684274,
+          "precision@1": 0.4666666666666667,
+          "precision@10": 0.08999999999999998,
+          "precision@20": 0.049166666666666664,
+          "precision@3": 0.19777777777777777,
+          "precision@5": 0.15333333333333332,
+          "recall@1": 0.440111111111111,
+          "recall@10": 0.798888888888889,
+          "recall@20": 0.8702222222222222,
+          "recall@3": 0.5409444444444444,
+          "recall@5": 0.6996666666666667,
+          "latency_ms_mean": 1191.7443443331529,
+          "latency_ms_p95": 1323.030925004423
+        },
+        "degradation_vs_clean": {
+          "recall@10": -0.04999999999999993,
+          "ndcg@10": -0.10808832750427733,
+          "mrr@10": -0.12548677248677242
+        },
+        "attack": {
+          "n_attacked_queries": 50,
+          "context_k": 5,
+          "top_k": 10,
+          "context_occupancy": 0.7959999999999999,
+          "clean_context_rate": 0.0,
+          "top_k_hit_rate": 1.0,
+          "median_first_adv_rank": 1.0,
+          "context_slots_by_family": {
+            "topical-mimicry": 6,
+            "lexical-gaming": 99,
+            "embedding-optimised": 79,
+            "instruction-injection": 15
+          },
+          "context_share_by_family": {
+            "topical-mimicry": 0.03015075376884422,
+            "lexical-gaming": 0.49748743718592964,
+            "embedding-optimised": 0.3969849246231156,
+            "instruction-injection": 0.07537688442211055
+          }
+        },
+        "context_detector": {
+          "n_queries": 300,
+          "flagged_queries": 26,
+          "flagged_rate": 0.08666666666666667,
+          "worst_severity_counts": {
+            "none": 274,
+            "high": 26
+          }
+        },
+        "quantum": {
+          "grover": {
+            "n_queries": 300,
+            "n_qubits": 6,
+            "mean_candidates": 64.0,
+            "mean_marked": 13.0,
+            "mean_oracle_queries": 1.0,
+            "mean_classical_expected_queries": 4.642857142857144,
+            "mean_query_reduction_factor": 4.642857142857144,
+            "mean_success_probability": 0.97198486328125,
+            "mean_wall_clock_ms": 0.06995099987155602,
+            "mean_simulation_overhead": 7.867433354463832
+          },
+          "qaoa": {
+            "n_queries": 300,
+            "n_qubits": 12,
+            "layers": 2,
+            "mean_solution_quality": 0.9966614423240344,
+            "min_solution_quality": 0.927491619482147,
+            "n_degenerate": 0,
+            "fraction_optimal": 0.7433333333333333,
+            "mean_objective_gap": 0.006792065471746487,
+            "max_objective_gap": 0.1505159068309183,
+            "mean_feasible_probability": 0.39972734897859663,
+            "mean_optimiser_calls": 360.0,
+            "mean_wall_clock_ms": 1119.1345273335658,
+            "mean_redundancy_qaoa": 0.6168488450845082,
+            "mean_redundancy_topk": 0.6742330302794775,
+            "mean_redundancy_reduction": 0.05738418519496918,
+            "fraction_less_redundant": 0.8133333333333334
+          },
+          "kernel_mode": [
+            "interference-3views"
+          ]
+        }
+      }
+    }
   }
 }
