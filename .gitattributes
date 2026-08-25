@@ -1,0 +1,18 @@
+# Normalise line endings in the repository so a clone on Linux or macOS does not
+# see CRLF in every Python file. Developed on Windows; git converts on checkout.
+* text=auto eol=lf
+
+# Windows batch files need CRLF to be reliable.
+*.bat text eol=crlf
+
+# Generated result files are JSON and diff usefully, so they stay text.
+*.json text eol=lf
+
+# Never touch these.
+*.npy binary
+*.npz binary
+*.faiss binary
+*.docx binary
+*.pptx binary
+*.xlsx binary
+*.pdf binary

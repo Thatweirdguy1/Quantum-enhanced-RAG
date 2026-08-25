@@ -1,0 +1,67 @@
+# --------------------------------------------------------------------- secrets
+# Never commit a real environment file. .env.example is the tracked template and
+# is deliberately NOT ignored below.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+secrets.json
+credentials.json
+
+# ------------------------------------------------------- large generated binaries
+# Both checklists call out large binary files as a thing that does not belong in
+# git. These are regenerable: `python -m scripts.build_embeddings` rebuilds
+# cache/, and qrag.data downloads data/ from the BEIR release on first use.
+cache/
+data/
+*.npy
+*.npz
+*.faiss
+*.bin
+*.pt
+*.safetensors
+
+# ------------------------------------------------------------------- run outputs
+# results/*.json ARE tracked: they are the measured numbers the report cites, and
+# a reader must be able to check the tables against them. Only bulky per-query
+# dumps and figures rebuilt by the plotting scripts are ignored.
+results/**/per_query/
+results/**/*.pkl
+figures/
+*.log
+_*.txt
+_*.docx
+
+# ------------------------------------------------------------------------ python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+build/
+dist/
+*.egg-info/
+.venv/
+venv/
+env/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.coverage
+htmlcov/
+
+# --------------------------------------------------------------------- editor/OS
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Machine-local tool permissions. Excluded by a global gitignore on this machine
+# too, but repeated here so a clone on a machine without that rule cannot commit
+# it by accident.
+.claude/settings.local.json

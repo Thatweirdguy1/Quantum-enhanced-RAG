@@ -1,0 +1,40 @@
+# Q-RAG: Quantum-Enhanced Retrieval-Augmented Generation
+# Group 165 | B.Tech CSE | Amity School of Engineering & Technology
+#
+# Core numerical stack (already present on the dev machine):
+numpy>=2.0
+scipy>=1.14
+pandas>=2.0
+matplotlib>=3.8
+
+# Retrieval
+faiss-cpu>=1.8            # dense ANN index (exact IndexFlatIP at this corpus scale)
+rank_bm25>=0.2.2          # lexical baseline leg of the fusion score
+
+# Quantum circuit simulation
+qiskit>=1.2               # circuit construction for Grover / QAOA
+qiskit-aer>=0.15          # statevector backend (cross-checked against qrag/qsim.py)
+
+# Embeddings + generation are served by a local Ollama daemon by default
+# (models: bge-m3 for embeddings, qwen3.5 / gemma4 for generation,
+#  deepseek-r1:8b as an independent answer-relevancy judge).
+requests>=2.31
+
+# Optional: the sentence-transformers backend named in the project synopsis.
+# Only needed if QRAG_EMBED_BACKEND=sbert; pulls in torch (~2.5 GB).
+# sentence-transformers>=3.0
+
+# Document generation for the report deliverables
+python-docx>=1.1
+python-pptx>=1.0
+openpyxl>=3.1
+
+# Demo API + test suite. Listed because they are imported by qrag/serve.py and
+# tests/test_qrag.py: leaving them undeclared meant `pip install -r
+# requirements.txt` produced an environment where the security controls could not
+# be exercised, which is the one thing this project should not ship.
+fastapi>=0.115,<0.200
+uvicorn>=0.30,<0.40
+httpx>=0.27,<0.29         # starlette's TestClient transport
+pytest>=8.0
+pypdf>=4.0                # reading the supplied checklist PDFs
