@@ -26,7 +26,7 @@ early morning, ahead of the 07:25 cutoff.
 | 1 | Source-of-truth facts file | `FACTS.md`, `scripts/build_facts.py`, `docs/facts.py` | **done, pushed** |
 | 2 | README + SECURITY | `README.md`, `SECURITY.md` | **done, pushed** |
 | 3 | Daily diary DOCX | `docs/daily_diary.md` -> `build/Q-RAG_Daily_Diary.docx` | **done, pushed** (61 facts substituted, ~4 pages) |
-| 4 | 10-slide PPTX | `docs/slides.py` -> `build/Q-RAG_Slides.pptx` | next |
+| 4 | 10-slide PPTX | `docs/slides.py` -> `build/Q-RAG_Slides.pptx` | **done, pushed** (10 slides, every figure via `docs.facts`) |
 | 5 | Research paper DOCX | `docs/research_paper.md` -> `build/Q-RAG_Research_Paper.docx` | not started |
 | 6 | Literature review DOCX | `docs/literature_review.md` -> `build/Q-RAG_Literature_Review.docx` | prose complete, renders at ~24 est. pages; commit last per the agreed order |
 
@@ -64,6 +64,12 @@ early morning, ahead of the 07:25 cutoff.
    tracked-file count.
 4. Provenance was duplicated across result writers; it is now one shared
    `qrag/provenance.py`.
+5. **A draft slide claimed QAOA cost "thirty times the rest of the pipeline".** It
+   does not — that conflated the pipeline's 30.7x slowdown against the classical
+   baseline with the QAOA stage's share of pipeline latency. Against the other four
+   stages it is 16.3x; against the classical baseline's whole per-query cost, 28.9x.
+   All three are now tokens computed in `docs/facts.py`, so the next document to
+   quote the figure cannot re-derive it wrongly.
 
 ## The headline results, so a resumed session does not have to re-derive them
 
@@ -78,7 +84,10 @@ Read from `results/experiment.json`. Full detail in `FACTS.md`.
   bit-identical to the baseline on every retrieval metric — it selects from an
   already-scored shortlist, so it contributes nothing to ranking quality.
 - **QAOA: 0.9978 mean solution quality**, exact optimum on 78.7% of queries, at
-  ~1,122 ms/query simulated. Most expensive stage by a factor of thirty.
+  ~1,122 ms/query simulated. That is 94.2% of the pipeline's per-query latency,
+  16.3x the other four stages combined and 28.9x the classical baseline's entire
+  per-query cost — three different ratios, all now `qaoa.share`, `qaoa.vs_rest` and
+  `qaoa.vs_base` tokens rather than an approximate "factor of thirty".
 - **Security: the one positive result, and it is narrow.** Adversarial context
   occupancy 0.9840 (`qrag[no-qaoa]`) -> 0.7960 (`qrag[full]`), a 0.1880 reduction
   attributable to the redundancy penalty via an ablation differing in that term

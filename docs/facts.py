@@ -197,6 +197,21 @@ class Facts:
                 "qaoa.redundancy_after": qaoa.get("mean_redundancy_qaoa"),
                 "qaoa.redundancy_drop": qaoa.get("mean_redundancy_reduction"),
             }
+            # How dominant the QAOA stage is, expressed three ways so that no
+            # document has to divide two figures in its author's head. An early draft
+            # asserted "thirty times the rest of the pipeline", conflating the
+            # pipeline's 30.7x slowdown against the classical baseline with the QAOA
+            # stage's share of pipeline latency. They are different quantities and
+            # only one of them is thirty.
+            q_ms = qaoa.get("mean_wall_clock_ms")
+            if q_ms and full_ms:
+                rest_ms = full_ms - q_ms
+                named |= {
+                    "qaoa.share": q_ms / full_ms,
+                    "qaoa.vs_rest": q_ms / rest_ms if rest_ms > 0 else float("nan"),
+                    "qaoa.vs_base": q_ms / base_ms if base_ms else float("nan"),
+                    "qaoa.rest_ms": rest_ms,
+                }
 
         # The Grover-only arm. Its simulation overhead is not the same number as the
         # full pipeline's, and quoting one where the other belongs is the kind of
