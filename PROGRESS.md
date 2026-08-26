@@ -28,7 +28,7 @@ early morning, ahead of the 07:25 cutoff.
 | 3 | Daily diary DOCX | `docs/daily_diary.md` -> `build/Q-RAG_Daily_Diary.docx` | **done, pushed** (61 facts substituted, ~4 pages) |
 | 4 | 10-slide PPTX | `docs/slides.py` -> `build/Q-RAG_Slides.pptx` | **done, pushed** (10 slides, every figure via `docs.facts`) |
 | 5 | Research paper DOCX | `docs/research_paper.md` -> `build/Q-RAG_Research_Paper.docx` | **done, pushed** (~17 est. pages, 274 facts substituted, 0 hand-typed measurements) |
-| 6 | Literature review DOCX | `docs/literature_review.md` -> `build/Q-RAG_Literature_Review.docx` | prose complete, renders at ~24 est. pages; commit last per the agreed order |
+| 6 | Literature review DOCX | `docs/literature_review.md` -> `build/Q-RAG_Literature_Review.docx` | **done, pushed** (11,146 words, ~24 est. pages vs. a 20-page requirement, ~90 verified references) |
 
 ## What deliverable 1 actually contains
 
@@ -122,11 +122,25 @@ Read from `results/experiment.json`. Full detail in `FACTS.md`.
 
 ## What is next
 
-Deliverable 6, the literature review, is the only one left. `docs/literature_review.md`
-is written (1,298 lines, ~24 estimated pages, ~90 verified references) and is still
-untracked by design — it was held to last per the agreed ordering. It needs no new
-prose: build it with `python -m docs.build lit`, then commit and push. The paper cites
-only from that file's reference list, verified by grep at build time.
+All six deliverables are done, committed and pushed as of 07:22 on 26 Aug 2026,
+ahead of the 07:25 cutoff. Nothing is blocked and nothing is half-written.
+
+Before submitting, two manual steps I could not do:
+
+1. **Fill the two placeholders.** `[ADD REMAINING GROUP 165 MEMBERS]` and
+   `[ADD SUPERVISOR NAME AND DESIGNATION]` appear in the front matter of the paper,
+   the literature review and the diary. Edit the `docs/*.md` sources, not the DOCX
+   files, then re-run `python -m docs.build all` so all three stay consistent.
+2. **Open each DOCX in Word to confirm pagination.** The page counts above are
+   python-docx estimates; it writes the file but does not lay it out. The 20-page
+   literature review requirement in particular should be eyeballed, and the TOC will
+   populate on first open because the field is written dirty.
+
+Rebuild everything at any time with:
+
+    python -m docs.build all && python docs/slides.py
+
+That is safe to run — it reads `results/*.json` and never re-runs the experiment.
 
 ## Known gaps, stated rather than hidden
 
