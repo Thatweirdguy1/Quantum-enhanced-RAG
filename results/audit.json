@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "git_commit": "92b3c0c",
+    "git_commit": "600f266",
     "python": "3.13.14",
     "platform": "Windows-11-10.0.26200-SP0",
     "numpy": "2.4.3"
@@ -19,7 +19,7 @@
       "title": "No secrets in tracked files",
       "source": "sec-prompts #1 (Gitleaks)",
       "status": "PASS",
-      "detail": "scanned 30 tracked text files against 10 credential shapes; none matched",
+      "detail": "scanned 42 tracked text files against 10 credential shapes; none matched",
       "evidence": []
     },
     {
@@ -107,7 +107,7 @@
       "title": "No large binaries staged for git",
       "source": "prototype-vs-production item 2, item 6",
       "status": "PASS",
-      "detail": "31 tracked files, 1.56 MB total; embeddings and corpora are regenerated, not committed",
+      "detail": "43 tracked files, 1.67 MB total; embeddings and corpora are regenerated, not committed",
       "evidence": []
     },
     {

@@ -27,7 +27,7 @@ early morning, ahead of the 07:25 cutoff.
 | 2 | README + SECURITY | `README.md`, `SECURITY.md` | **done, pushed** |
 | 3 | Daily diary DOCX | `docs/daily_diary.md` -> `build/Q-RAG_Daily_Diary.docx` | **done, pushed** (61 facts substituted, ~4 pages) |
 | 4 | 10-slide PPTX | `docs/slides.py` -> `build/Q-RAG_Slides.pptx` | **done, pushed** (10 slides, every figure via `docs.facts`) |
-| 5 | Research paper DOCX | `docs/research_paper.md` -> `build/Q-RAG_Research_Paper.docx` | not started |
+| 5 | Research paper DOCX | `docs/research_paper.md` -> `build/Q-RAG_Research_Paper.docx` | **done, pushed** (~17 est. pages, 274 facts substituted, 0 hand-typed measurements) |
 | 6 | Literature review DOCX | `docs/literature_review.md` -> `build/Q-RAG_Literature_Review.docx` | prose complete, renders at ~24 est. pages; commit last per the agreed order |
 
 ## What deliverable 1 actually contains
@@ -70,6 +70,26 @@ early morning, ahead of the 07:25 cutoff.
    stages it is 16.3x; against the classical baseline's whole per-query cost, 28.9x.
    All three are now tokens computed in `docs/facts.py`, so the next document to
    quote the figure cannot re-derive it wrongly.
+6. **A draft of the paper's Table 5.3 mixed two arms in one column.** Candidate
+   count, marked count, oracle queries and success probability were taken from
+   `qrag[full]`'s Grover block while the overhead and wall clock came from the
+   `qrag[grover]` arm — 8.98x and 0.074 ms/query instead of the full pipeline's
+   8.03x and 0.068 ms/query. Both tokens resolve, so the facts layer could not catch
+   this one; it needed reading the table against the results file. The table is now
+   one arm throughout, with the Grover-only arm's overhead on its own labelled row.
+7. **The QAOA solution-quality figure is conditional, and the paper now says so.**
+   The cardinality constraint is a soft penalty, so only 0.40 of the readout
+   probability mass is feasible and `rerank_qaoa` post-selects before decoding
+   (`qrag/qaoa.py:255-262`). Quoting 0.9978 without the 0.40 overstates the routine:
+   on hardware it implies ~2.5x the shots for the same answer. Both now appear in
+   the same table.
+8. **`rerank_greedy_mmr` exists but was never run as an experiment arm.** The
+   classical diversity-aware selector that would test whether the security result is
+   about QAOA or merely about the redundancy objective is already implemented
+   (`qrag/qaoa.py:132`) and is used in the solver comparison, but there is no MMR
+   entry anywhere in `results/experiment.json`. The paper states this as a missing
+   run rather than a missing implementation, and it is the first item of further
+   work.
 
 ## The headline results, so a resumed session does not have to re-derive them
 
@@ -96,6 +116,17 @@ Read from `results/experiment.json`. Full detail in `FACTS.md`.
   families.
 - **Full pipeline is 30.7x slower than its own classical baseline.** No speed-up is
   claimed anywhere.
+- **QAOA quality is post-selected.** 0.9978 is the quality of the best *feasible*
+  decoded selection; feasible readout mass is only 0.40. On hardware that is ~2.5x
+  the shots. Never quote the quality without the feasible probability.
+
+## What is next
+
+Deliverable 6, the literature review, is the only one left. `docs/literature_review.md`
+is written (1,298 lines, ~24 estimated pages, ~90 verified references) and is still
+untracked by design — it was held to last per the agreed ordering. It needs no new
+prose: build it with `python -m docs.build lit`, then commit and push. The paper cites
+only from that file's reference list, verified by grep at build time.
 
 ## Known gaps, stated rather than hidden
 

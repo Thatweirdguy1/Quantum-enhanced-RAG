@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "git_commit": "92b3c0c",
+    "git_commit": "600f266",
     "python": "3.13.14",
     "platform": "Windows-11-10.0.26200-SP0",
     "numpy": "2.4.3"
@@ -8,7 +8,7 @@
   "tests": {
     "command": "python -m pytest tests -q",
     "exit": 0,
-    "summary": "68 passed, 1 warning in 4.41s",
+    "summary": "68 passed, 1 warning in 41.00s",
     "counts": {
       "passed": 68
     },
