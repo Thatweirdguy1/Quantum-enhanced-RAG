@@ -34,6 +34,7 @@ that each stage can be shown to be *doing nothing* if that is the truth.
 | **QAOA reranking** | Selection QUBO `min −Σrᵢxᵢ + λΣ_{i<j}sᵢⱼxᵢxⱼ + μ(Σxᵢ−k)²`, COBYLA, 3 restarts, exact brute-force optimum computed alongside for a true quality figure | Working, and the most expensive stage by far (~1.1 s/query simulated) |
 | **Adversarial arm** | Four attack families injected into the corpus, `qrels` untouched | Working, and the detector's blind spot is measured rather than hidden |
 | **Demo API** | FastAPI, hardened to the supplied pre-deploy checklist | Working, deliberately minimal. See [SECURITY.md](SECURITY.md) |
+| **Research workbench** | Streamlit UI for live queries, mode comparison, recorded evaluation, and security results | Working locally; uses cached SciFact index and Ollama for live queries |
 
 ### The two gates
 
@@ -180,6 +181,20 @@ python -m scripts.security_audit
 Every result file embeds the config hash and the seed that produced it, so a table
 in the report can be traced back to the exact configuration. All seeds are fixed at
 `20260720`. Same command + same seed → same numbers.
+
+### Local research workbench
+
+```bash
+python -m streamlit run qrag/workbench.py
+```
+
+The dark workbench starts on `127.0.0.1:8501`. Evaluation and security tabs read
+`results/experiment.json` without loading models. A live query loads the SciFact
+corpus, cached embeddings and trained kernel, then uses local Ollama for query
+embedding. Enable answer generation to use `qwen3.5` and the independent
+`deepseek-r1:8b` judge. The CSV button exports the currently ranked passages.
+Stitch mockups in `stitch_q_rag_research_workbench/` informed the layout; all
+displayed measurements come from the actual run or recorded experiment.
 
 ### Optional: the demo API
 
