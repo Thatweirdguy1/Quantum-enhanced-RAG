@@ -13,7 +13,7 @@ The retriever/generator boundary is deliberately explicit: ``BaselineRAG`` and
 switching between them is a configuration change rather than a code path.
 """
 
-__version__ = "0.6.0"  # week 6 checkpoint
+__version__ = "0.7.0"
 
 GROUP = "165"
 INSTITUTION = "Amity School of Engineering & Technology"

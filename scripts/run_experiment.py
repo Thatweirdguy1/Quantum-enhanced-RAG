@@ -19,7 +19,7 @@ Three arms, in order of what they are for:
    distinction cannot be lost in transcription.
 
 3. **Poisoned corpus.** The security arm. Four adversarial families are injected,
-   qrels untouched, and the same three pipelines are re-run. The hypothesis under
+   qrels untouched, and four pipelines are run. The hypothesis under
    test is specific: QAOA's redundancy penalty should suppress *clusters* of
    mutually-similar injected passages, so context occupancy should fall between
    ``qrag[no-qaoa]`` and ``qrag[full]``. If it does not, that is the finding.
@@ -72,13 +72,15 @@ ABLATIONS: tuple[tuple[str, dict | None], ...] = (
                         use_grover=True, use_qaoa=True)),
 )
 
-# The poisoned arm runs three systems only. qrag[no-qaoa] is the control that makes
+# The poisoned arm includes a classical MMR control. qrag[no-qaoa] makes
 # the security claim falsifiable: without it, any drop in context occupancy could
 # be credited to the kernel instead of to the redundancy penalty.
 POISON_SYSTEMS: tuple[tuple[str, dict | None], ...] = (
     ("classical-baseline", None),
     ("qrag[no-qaoa]", dict(use_kernel=True, use_interference=True,
                            use_grover=True, use_qaoa=False)),
+    ("qrag[full-mmr]", dict(use_kernel=True, use_interference=True,
+                            use_grover=True, use_qaoa=False, use_mmr=True)),
     ("qrag[full]", dict(use_kernel=True, use_interference=True,
                         use_grover=True, use_qaoa=True)),
 )
@@ -163,6 +165,18 @@ def _aggregate_traces(traces: list[dict]) -> dict:
             "mean_redundancy_topk": float(red_t.mean()),
             "mean_redundancy_reduction": float((red_t - red_q).mean()),
             "fraction_less_redundant": float(np.mean(red_q < red_t)),
+        }
+    mmr = [t["mmr"] for t in traces if "mmr" in t]
+    if mmr:
+        red_m = np.array([m["redundancy_mmr"] for m in mmr], float)
+        red_t = np.array([m["redundancy_topk"] for m in mmr], float)
+        out["mmr"] = {
+            "n_queries": len(mmr),
+            "mean_wall_clock_ms": float(np.mean([m["wall_clock_ms"] for m in mmr])),
+            "mean_redundancy_mmr": float(red_m.mean()),
+            "mean_redundancy_topk": float(red_t.mean()),
+            "mean_redundancy_reduction": float((red_t - red_m).mean()),
+            "fraction_less_redundant": float(np.mean(red_m < red_t)),
         }
     kernel_modes = {t["kernel_mode"] for t in traces if "kernel_mode" in t}
     if kernel_modes:
@@ -255,19 +269,19 @@ def run_poison_arm(bench: Bench, embedder, args, clean_means: dict) -> dict:
         context_scan = scan_ranked_context(ranked, poisoned_bench.dataset,
                                            context_k=bench.cfg.gen.max_context_docs)
         means = report.means()
-        out["systems"][label] = {
+        system_result = {
             "metrics_poisoned": means,
-            # Retrieval quality on the poisoned corpus vs the clean run. The qrels
-            # are identical, so this difference is the cost the attack imposes on
-            # ordinary queries -- not just on the attacked ones.
-            "degradation_vs_clean": {
-                m: means[m] - clean_means.get(label, {}).get(m, float("nan"))
-                for m in ("recall@10", "ndcg@10", "mrr@10")
-                if m in means},
             "attack": attack,
             "context_detector": context_scan,
             "quantum": report.extras.get("quantum", {}),
         }
+        # Only systems with an identical clean arm have a meaningful degradation.
+        if label in clean_means:
+            system_result["degradation_vs_clean"] = {
+                m: means[m] - clean_means[label][m]
+                for m in ("recall@10", "ndcg@10", "mrr@10")
+                if m in means and m in clean_means[label]}
+        out["systems"][label] = system_result
         _checkpoint({"poisoned_partial": out},
                     args.out.replace(".json", "_poison.json"), bench.cfg)
     return out

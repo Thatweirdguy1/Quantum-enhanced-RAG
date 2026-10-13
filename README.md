@@ -189,7 +189,11 @@ uvicorn qrag.serve:app --host 127.0.0.1 --port 8000
 Off by default and not required for any result. It exists so the supplied pre-deploy
 checklist could be satisfied by a service that actually implements security headers,
 rate limiting, restricted CORS and correlation-id error handling — rather than by a
-report asserting that it would. See [SECURITY.md](SECURITY.md).
+report asserting that it would. `create_app` accepts a loaded pipeline, dataset,
+embedder and `OllamaGenerator`; with all four injected, `POST /answer` performs
+retrieval and returns a grounded answer with numbered passage citations. The module-
+level app deliberately returns 503 until those assets are loaded. See
+[SECURITY.md](SECURITY.md).
 
 ---
 

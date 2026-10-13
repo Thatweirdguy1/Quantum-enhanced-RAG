@@ -88,6 +88,7 @@ class QuantumConfig:
 class GenConfig:
     backend: str = "ollama"
     model: str = os.environ.get("QRAG_GEN_MODEL", "qwen3.5")
+    ollama_url: str = os.environ.get("OLLAMA_URL", "http://localhost:11434")
     # Deliberately a different model family from the generator: using the
     # generator to grade itself introduces well-documented self-preference bias.
     judge_model: str = os.environ.get("QRAG_JUDGE_MODEL", "deepseek-r1:8b")

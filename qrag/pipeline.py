@@ -34,7 +34,8 @@ from .fusion import fuse, minmax
 from .grover import GroverShortlister
 from .index import BM25Index, DenseIndex
 from .kernel import PhaseKernel
-from .qaoa import QUBO, rerank_exact, rerank_qaoa, selection_redundancy
+from .qaoa import (QUBO, rerank_exact, rerank_greedy_mmr, rerank_qaoa,
+                   selection_redundancy)
 from .security import validate_query, validate_top_k
 
 
@@ -48,6 +49,16 @@ class RetrievalResult:
 
     def top(self, k: int) -> list[str]:
         return self.ranked[:k]
+
+
+def _runtime_query_vector(vector: np.ndarray, expected_dim: int) -> np.ndarray:
+    vector = np.asarray(vector, dtype=np.float32)
+    if vector.shape != (expected_dim,) or not np.isfinite(vector).all():
+        raise ValueError(f"query vector must be finite with shape ({expected_dim},)")
+    norm = float(np.linalg.norm(vector))
+    if norm == 0.0:
+        raise ValueError("query vector must be non-zero")
+    return vector / norm
 
 
 class BaselineRAG:
@@ -74,14 +85,16 @@ class BaselineRAG:
         idx = np.array([self.position[d] for d in pool])
         return pool, idx, self.dense.vectors[idx] @ qvec, bm25_all[idx]
 
-    def retrieve(self, query_id: str, query_text: str, top_k: int = 20) -> RetrievalResult:
+    def retrieve(self, query_id: str, query_text: str, top_k: int = 20,
+                 query_vector: np.ndarray | None = None) -> RetrievalResult:
         t0 = time.perf_counter()
         # Both pipelines validate here rather than at the caller, because this is
         # the library's entry point: query_text reaches the BM25 tokeniser and
         # top_k sizes every array downstream.
         query_text = validate_query(query_text)
         top_k = validate_top_k(top_k)
-        qvec = self.qvecs[query_id]
+        qvec = (self.qvecs[query_id] if query_vector is None else
+                _runtime_query_vector(query_vector, self.dense.vectors.shape[1]))
         pool_size = max(top_k * 5, self.cfg.quantum.grover_shortlist)
         pool, _idx, cos, bm = self._candidate_pool(query_text, qvec, pool_size)
 
@@ -112,7 +125,10 @@ class QRAG:
                  query_vectors: dict[str, np.ndarray], kernel: PhaseKernel,
                  cfg: Config, *, use_kernel: bool = True,
                  use_interference: bool = True, use_grover: bool = True,
-                 use_qaoa: bool = True, label: str | None = None):
+                 use_qaoa: bool = True, use_mmr: bool = False,
+                 label: str | None = None):
+        if use_qaoa and use_mmr:
+            raise ValueError("QAOA and MMR are alternative rerankers")
         self.ds = dataset
         self.dense = dense
         self.bm25 = bm25
@@ -123,6 +139,7 @@ class QRAG:
         self.use_interference = use_interference
         self.use_grover = use_grover
         self.use_qaoa = use_qaoa
+        self.use_mmr = use_mmr
         self.doc_ids = dataset.doc_ids
         self.position = {d: i for i, d in enumerate(self.doc_ids)}
         self.grover = GroverShortlister(cfg.quantum.grover_threshold_quantile,
@@ -134,7 +151,8 @@ class QRAG:
         flags = [n for n, on in (("kernel", self.use_kernel),
                                  ("interf", self.use_interference),
                                  ("grover", self.use_grover),
-                                 ("qaoa", self.use_qaoa)) if on]
+                                 ("qaoa", self.use_qaoa),
+                                 ("mmr", self.use_mmr)) if on]
         return "qrag[" + "+".join(flags) + "]" if flags else "qrag[none]"
 
     # ------------------------------------------------------------------ stages
@@ -148,12 +166,14 @@ class QRAG:
                 views.append(self.dense.vectors[pool_idx[i]])
         return np.stack(views)
 
-    def retrieve(self, query_id: str, query_text: str, top_k: int = 20) -> RetrievalResult:
+    def retrieve(self, query_id: str, query_text: str, top_k: int = 20,
+                 query_vector: np.ndarray | None = None) -> RetrievalResult:
         t0 = time.perf_counter()
         query_text = validate_query(query_text)
         top_k = validate_top_k(top_k)
         qcfg = self.cfg.quantum
-        qvec = self.qvecs[query_id]
+        qvec = (self.qvecs[query_id] if query_vector is None else
+                _runtime_query_vector(query_vector, self.dense.vectors.shape[1]))
         trace: dict = {}
 
         # --- stage 1: classical pre-filter
@@ -209,7 +229,7 @@ class QRAG:
 
         # --- stage 4: QAOA reranking of the surviving head
         cand_n = min(qcfg.qaoa_candidates, len(short_order))
-        if self.use_qaoa and cand_n >= qcfg.qaoa_k + 1:
+        if (self.use_qaoa or self.use_mmr) and cand_n >= qcfg.qaoa_k + 1:
             head = short_order[:cand_n]
             rel = minmax(fused[head])
             hv = pool_vecs[head]
@@ -217,33 +237,41 @@ class QRAG:
             np.fill_diagonal(sim, 0.0)
             qubo = QUBO(rel, sim, qcfg.qaoa_k, qcfg.qaoa_redundancy_lambda,
                         qcfg.qaoa_cardinality_mu)
-            exact = rerank_exact(qubo)
-            qres = rerank_qaoa(qubo, qcfg.qaoa_layers, qcfg.qaoa_optimiser_iters,
-                               qcfg.seed, qcfg.backend, exact.objective)
-            selected = [int(head[i]) for i in qres.selected]
+            if self.use_mmr:
+                mres = rerank_greedy_mmr(qubo)
+                reranked = mres
+                trace["mmr"] = {
+                    "objective": mres.objective,
+                    "wall_clock_ms": mres.wall_clock_s * 1e3,
+                    "redundancy_mmr": selection_redundancy(qubo, mres.selected),
+                    "redundancy_topk": selection_redundancy(
+                        qubo, sorted(np.argsort(-rel)[: qcfg.qaoa_k].tolist())),
+                }
+            else:
+                exact = rerank_exact(qubo)
+                qres = rerank_qaoa(qubo, qcfg.qaoa_layers, qcfg.qaoa_optimiser_iters,
+                                   qcfg.seed, qcfg.backend, exact.objective)
+                reranked = qres
+                trace["qaoa"] = {
+                    "n_qubits": qres.n_qubits,
+                    "layers": qres.layers,
+                    "objective": qres.objective,
+                    "exact_objective": exact.objective,
+                    "solution_quality": qres.approximation_ratio,
+                    "is_optimal": qres.extras["is_optimal"],
+                    "objective_gap": qres.extras["objective_gap"],
+                    "worst_feasible_objective": qres.extras["worst_feasible_objective"],
+                    "feasible_probability": qres.feasible_probability,
+                    "optimiser_calls": qres.optimiser_iters,
+                    "wall_clock_ms": qres.wall_clock_s * 1e3,
+                    "redundancy_qaoa": selection_redundancy(qubo, qres.selected),
+                    "redundancy_topk": selection_redundancy(
+                        qubo, sorted(np.argsort(-rel)[: qcfg.qaoa_k].tolist())),
+                }
+            selected = [int(head[i]) for i in reranked.selected]
             selected.sort(key=lambda i: -fused[i])
             tail = [int(i) for i in short_order if int(i) not in set(selected)]
             final_idx = selected + tail
-            trace["qaoa"] = {
-                "n_qubits": qres.n_qubits,
-                "layers": qres.layers,
-                "objective": qres.objective,
-                "exact_objective": exact.objective,
-                # Affine-invariant quality in [0, 1], 1 == exact optimum. Not
-                # achieved/optimal: that form inverts when the objective is
-                # positive, which happens on queries whose candidates are weakly
-                # relevant and mutually similar. See qaoa.solution_quality.
-                "solution_quality": qres.approximation_ratio,
-                "is_optimal": qres.extras["is_optimal"],
-                "objective_gap": qres.extras["objective_gap"],
-                "worst_feasible_objective": qres.extras["worst_feasible_objective"],
-                "feasible_probability": qres.feasible_probability,
-                "optimiser_calls": qres.optimiser_iters,
-                "wall_clock_ms": qres.wall_clock_s * 1e3,
-                "redundancy_qaoa": selection_redundancy(qubo, qres.selected),
-                "redundancy_topk": selection_redundancy(
-                    qubo, sorted(np.argsort(-rel)[: qcfg.qaoa_k].tolist())),
-            }
         else:
             final_idx = [int(i) for i in short_order]
 

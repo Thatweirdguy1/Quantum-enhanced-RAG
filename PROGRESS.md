@@ -150,5 +150,6 @@ That is safe to run — it reads `results/*.json` and never re-runs the experime
 - Page counts printed by `python -m docs.build` are estimates. python-docx writes
   the file but does not lay it out, so the true count depends on the renderer that
   opens it. Open the DOCX in Word to confirm the 20-page requirement.
-- `qrag/generate.py` (end-to-end answer generation and answer-relevancy judging) was
-  scoped but is not built. Nothing in the five deliverables depends on it.
+- `qrag/generate.py` and the injectable `/answer` API path now provide grounded
+  Ollama generation over retrieved passages. Automatic startup asset loading and
+  the independent answer-relevancy judge remain future work.

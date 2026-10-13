@@ -135,7 +135,12 @@ class SearchResponse(BaseModel):
     correlation_id: str = ""
 
 
-def create_app(pipeline=None, dataset=None) -> FastAPI:
+class AnswerResponse(SearchResponse):
+    answer: str
+    context_report: dict
+
+
+def create_app(pipeline=None, dataset=None, embedder=None, generator=None) -> FastAPI:
     """Build the FastAPI app. ``pipeline`` is injected so tests need no corpus."""
     app = FastAPI(
         title="Q-RAG demo API",
@@ -236,8 +241,8 @@ def create_app(pipeline=None, dataset=None) -> FastAPI:
         return {"status": "ok"}
 
     @app.post("/search", response_model=SearchResponse)
-    async def search(body: SearchRequest, request: Request,
-                     _auth: None = Depends(require_token)) -> SearchResponse:
+    def search(body: SearchRequest, request: Request,
+               _auth: None = Depends(require_token)) -> SearchResponse:
         correlation = request.state.correlation
         t0 = time.perf_counter()
         # Validate again here even though pydantic bounded the field: pydantic
@@ -248,11 +253,13 @@ def create_app(pipeline=None, dataset=None) -> FastAPI:
         # Log the digest, never the query.
         LOG.info("search corr=%s q=%s k=%d", correlation, fingerprint(query), top_k)
 
-        if pipeline is None:
+        if pipeline is None or embedder is None:
             raise HTTPException(status_code=503,
                                 detail="retrieval index not loaded")
 
-        result = pipeline.retrieve(f"api-{correlation}", query, top_k=top_k)
+        query_vector = embedder.encode([query])[0] if embedder is not None else None
+        result = pipeline.retrieve(f"api-{correlation}", query, top_k=top_k,
+                                   query_vector=query_vector)
         hits, flagged = [], 0
         for doc_id in result.ranked[:top_k]:
             title, risk = "", "none"
@@ -269,6 +276,33 @@ def create_app(pipeline=None, dataset=None) -> FastAPI:
         return SearchResponse(hits=hits, n_flagged=flagged,
                               latency_ms=(time.perf_counter() - t0) * 1e3,
                               correlation_id=correlation)
+
+    @app.post("/answer", response_model=AnswerResponse)
+    def answer(body: SearchRequest, request: Request,
+               _auth: None = Depends(require_token)) -> AnswerResponse:
+        if pipeline is None or dataset is None or embedder is None or generator is None:
+            raise HTTPException(status_code=503, detail="answering pipeline not loaded")
+        t0 = time.perf_counter()
+        correlation = request.state.correlation
+        query = validate_query(body.query)
+        top_k = validate_top_k(body.top_k)
+        qvec = embedder.encode([query])[0]
+        result = pipeline.retrieve(f"api-{correlation}", query, top_k=top_k,
+                                   query_vector=qvec)
+        docs = [dataset.doc(doc_id) for doc_id in result.ranked[:top_k]]
+        generated = generator.generate(query, [d.content for d in docs],
+                                       [d.doc_id for d in docs])
+        hits = [Hit(doc_id=d.doc_id, score=result.scores.get(d.doc_id, 0.0),
+                    title=d.title[:200], injection_risk=injection_risk(d.content))
+                for d in docs]
+        return AnswerResponse(
+            hits=hits,
+            n_flagged=sum(h.injection_risk != "none" for h in hits),
+            latency_ms=(time.perf_counter() - t0) * 1e3,
+            correlation_id=correlation,
+            answer=generated.text,
+            context_report=generated.context_report,
+        )
 
     return app
 
