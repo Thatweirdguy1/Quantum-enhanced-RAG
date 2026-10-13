@@ -31,6 +31,7 @@ import hmac
 import time
 import uuid
 from collections import deque
+from contextlib import asynccontextmanager
 from dataclasses import dataclass
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
@@ -138,10 +139,30 @@ class SearchResponse(BaseModel):
 class AnswerResponse(SearchResponse):
     answer: str
     context_report: dict
+    judge: dict | None = None
 
 
-def create_app(pipeline=None, dataset=None, embedder=None, generator=None) -> FastAPI:
+def create_app(pipeline=None, dataset=None, embedder=None, generator=None, judge=None,
+               *, auto_load: bool = False, runtime_loader=None) -> FastAPI:
     """Build the FastAPI app. ``pipeline`` is injected so tests need no corpus."""
+    services = {"pipeline": pipeline, "dataset": dataset, "embedder": embedder,
+                "generator": generator, "judge": judge}
+
+    @asynccontextmanager
+    async def lifespan(_app):
+        if auto_load:
+            loader = runtime_loader
+            if loader is None:
+                from .runtime import load_runtime
+                loader = load_runtime
+            try:
+                runtime = loader()
+                services.update(vars(runtime))
+                LOG.info("retrieval and generation runtime loaded")
+            except Exception:
+                LOG.exception("runtime auto-load failed; API remains unavailable")
+        yield
+
     app = FastAPI(
         title="Q-RAG demo API",
         version="0.1.0",
@@ -150,6 +171,7 @@ def create_app(pipeline=None, dataset=None, embedder=None, generator=None) -> Fa
         docs_url=None if IS_PROD else "/docs",
         redoc_url=None,
         openapi_url=None if IS_PROD else "/openapi.json",
+        lifespan=lifespan,
     )
     app.add_middleware(CORSMiddleware, allow_origins=ALLOWED_ORIGINS,
                        allow_credentials=False, allow_methods=["POST", "GET"],
@@ -253,6 +275,8 @@ def create_app(pipeline=None, dataset=None, embedder=None, generator=None) -> Fa
         # Log the digest, never the query.
         LOG.info("search corr=%s q=%s k=%d", correlation, fingerprint(query), top_k)
 
+        pipeline, embedder = services["pipeline"], services["embedder"]
+        dataset = services["dataset"]
         if pipeline is None or embedder is None:
             raise HTTPException(status_code=503,
                                 detail="retrieval index not loaded")
@@ -280,6 +304,9 @@ def create_app(pipeline=None, dataset=None, embedder=None, generator=None) -> Fa
     @app.post("/answer", response_model=AnswerResponse)
     def answer(body: SearchRequest, request: Request,
                _auth: None = Depends(require_token)) -> AnswerResponse:
+        pipeline, dataset = services["pipeline"], services["dataset"]
+        embedder, generator = services["embedder"], services["generator"]
+        judge = services["judge"]
         if pipeline is None or dataset is None or embedder is None or generator is None:
             raise HTTPException(status_code=503, detail="answering pipeline not loaded")
         t0 = time.perf_counter()
@@ -292,6 +319,8 @@ def create_app(pipeline=None, dataset=None, embedder=None, generator=None) -> Fa
         docs = [dataset.doc(doc_id) for doc_id in result.ranked[:top_k]]
         generated = generator.generate(query, [d.content for d in docs],
                                        [d.doc_id for d in docs])
+        judged = (judge.evaluate(query, generated.text, [d.content for d in docs],
+                                 [d.doc_id for d in docs]) if judge else None)
         hits = [Hit(doc_id=d.doc_id, score=result.scores.get(d.doc_id, 0.0),
                     title=d.title[:200], injection_risk=injection_risk(d.content))
                 for d in docs]
@@ -302,12 +331,13 @@ def create_app(pipeline=None, dataset=None, embedder=None, generator=None) -> Fa
             correlation_id=correlation,
             answer=generated.text,
             context_report=generated.context_report,
+            judge=vars(judged) if judged else None,
         )
 
     return app
 
 
-app = create_app()
+app = create_app(auto_load=True)
 
 
 if __name__ == "__main__":

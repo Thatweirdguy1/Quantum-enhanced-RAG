@@ -607,6 +607,50 @@ def test_generator_uses_configured_ollama_url():
     assert OllamaGenerator(cfg).url == "http://ollama.internal:1234/api/generate"
 
 
+def test_independent_judge_parses_bounded_json(monkeypatch):
+    from qrag.config import GenConfig
+    from qrag.generate import OllamaJudge
+
+    class Response:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"response": '{"relevance": 0.8, "grounded": true, '
+                                '"explanation": "Supported by passage 1."}'}
+
+    monkeypatch.setattr("qrag.generate.requests.post", lambda *a, **k: Response())
+    result = OllamaJudge(GenConfig(model="generator", judge_model="judge")).evaluate(
+        "Question?", "Answer [1].", ["Evidence."], ["d1"])
+    assert result.relevance == pytest.approx(0.8)
+    assert result.grounded is True
+    with pytest.raises(ValueError, match="must differ"):
+        OllamaJudge(GenConfig(model="same", judge_model="same"))
+
+
+def test_module_runtime_can_be_loaded_at_app_startup():
+    from types import SimpleNamespace
+    from fastapi.testclient import TestClient
+    from qrag.pipeline import RetrievalResult
+    import qrag.serve as serve
+
+    class Embedder:
+        def encode(self, texts):
+            return np.ones((len(texts), 2), dtype=np.float32)
+
+    class Pipeline:
+        def retrieve(self, query_id, query_text, top_k=20, query_vector=None):
+            return RetrievalResult(query_id, ["d1"], {"d1": 1.0}, 0.1)
+
+    runtime = SimpleNamespace(pipeline=Pipeline(), dataset=None, embedder=Embedder(),
+                              generator=None, judge=None)
+    app = serve.create_app(auto_load=True, runtime_loader=lambda: runtime)
+    with TestClient(app) as client:
+        response = client.post("/search", json={"query": "test", "top_k": 1})
+    assert response.status_code == 200
+    assert response.json()["hits"][0]["doc_id"] == "d1"
+
+
 def test_every_error_uses_one_envelope():
     """A client should not have to branch on status to find the message."""
     client, _ = _client(QRAG_ENV="development", QRAG_API_TOKEN="s3cret-token-value")
