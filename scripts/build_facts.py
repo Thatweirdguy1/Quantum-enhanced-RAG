@@ -420,16 +420,20 @@ def section_poison(exp: dict) -> list[str]:
     return out
 
 
-def section_status() -> list[str]:
+def section_status(verification: dict) -> list[str]:
+    tests = verification.get("tests", {})
+    audit = verification.get("audit", {})
     return [
         "## 8. Verification status",
         "",
         "Both are re-runnable and both must be re-run before the report is "
         "submitted, because a stale pass is worse than no claim.",
         "",
-        "- `python -m pytest tests -q` -> **68 passed**",
-        "- `python -m scripts.security_audit` -> **16 passed, 0 failed, 0 warned, "
-        "8 not applicable**",
+        f"- `python -m pytest tests -q` -> **{tests.get('passed', 'unknown')} passed**",
+        f"- `python -m scripts.security_audit` -> **{audit.get('passed', 'unknown')} "
+        f"passed, {audit.get('failed', 'unknown')} failed, "
+        f"{audit.get('warned', 'unknown')} warned, "
+        f"{audit.get('not_applicable', 'unknown')} not applicable**",
         "",
         "Three defects in this project's own code were found by those two harnesses "
         "and are written up in `SECURITY.md`: dead request validation on the demo "
@@ -516,6 +520,7 @@ def section_prohibited(exp: dict) -> list[str]:
 def main() -> int:
     exp = _load("experiment.json")
     kt = _load("kernel_training.json")
+    verification = _load("verification.json") or {}
     if exp is None:
         print("results/experiment.json not found. Run:\n"
               "  python -m scripts.run_experiment")
@@ -548,7 +553,7 @@ def main() -> int:
     body += section_quantum(exp)
     body += section_latency(exp)
     body += section_poison(exp)
-    body += section_status()
+    body += section_status(verification)
     body += section_prohibited(exp)
 
     out = ROOT / "FACTS.md"

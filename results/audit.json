@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "git_commit": "d0f2b26",
+    "git_commit": "78b7b61",
     "python": "3.13.15",
     "platform": "Windows-11-10.0.26200-SP0",
     "numpy": "2.5.4"
@@ -19,7 +19,7 @@
       "title": "No secrets in tracked files",
       "source": "sec-prompts #1 (Gitleaks)",
       "status": "PASS",
-      "detail": "scanned 45 tracked text files against 10 credential shapes; none matched",
+      "detail": "scanned 46 tracked text files against 10 credential shapes; none matched",
       "evidence": []
     },
     {
@@ -107,7 +107,7 @@
       "title": "No large binaries staged for git",
       "source": "prototype-vs-production item 2, item 6",
       "status": "PASS",
-      "detail": "47 tracked files, 1.82 MB total; embeddings and corpora are regenerated, not committed",
+      "detail": "48 tracked files, 1.83 MB total; embeddings and corpora are regenerated, not committed",
       "evidence": []
     },
     {
@@ -123,7 +123,7 @@
       "title": "Runs are seeded and results are traceable to a config",
       "source": "prototype-vs-production item 7 (testing/QA)",
       "status": "PASS",
-      "detail": "5 result file(s), every section seeded; each embeds the config or the commit that produced it",
+      "detail": "6 result file(s), every section seeded; each embeds the config or the commit that produced it",
       "evidence": []
     },
     {
