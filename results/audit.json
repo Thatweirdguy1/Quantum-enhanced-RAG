@@ -1,9 +1,9 @@
 {
   "provenance": {
-    "git_commit": "600f266",
-    "python": "3.13.14",
+    "git_commit": "d0f2b26",
+    "python": "3.13.15",
     "platform": "Windows-11-10.0.26200-SP0",
-    "numpy": "2.4.3"
+    "numpy": "2.5.4"
   },
   "counts": {
     "PASS": 16,
@@ -19,7 +19,7 @@
       "title": "No secrets in tracked files",
       "source": "sec-prompts #1 (Gitleaks)",
       "status": "PASS",
-      "detail": "scanned 42 tracked text files against 10 credential shapes; none matched",
+      "detail": "scanned 45 tracked text files against 10 credential shapes; none matched",
       "evidence": []
     },
     {
@@ -43,7 +43,7 @@
       "title": "Configuration is env-var driven with no embedded defaults for secrets",
       "source": "sec-prompts #3 / prototype-vs-production item 2",
       "status": "PASS",
-      "detail": "config.py reads the environment (10 accessor calls) and require_env fails fast on an unset variable",
+      "detail": "config.py reads the environment (12 accessor calls) and require_env fails fast on an unset variable",
       "evidence": []
     },
     {
@@ -107,7 +107,7 @@
       "title": "No large binaries staged for git",
       "source": "prototype-vs-production item 2, item 6",
       "status": "PASS",
-      "detail": "43 tracked files, 1.67 MB total; embeddings and corpora are regenerated, not committed",
+      "detail": "47 tracked files, 1.82 MB total; embeddings and corpora are regenerated, not committed",
       "evidence": []
     },
     {
