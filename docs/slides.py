@@ -407,19 +407,19 @@ def build(out: Path = OUT) -> Path:
     widths = [Inches(3.6), Inches(2.6), Inches(2.4), Inches(2.4)]
     psys = f.exp["poisoned"]["systems"]
     rows = []
-    for label in ["classical-baseline", "qrag[no-qaoa]", "qrag[full]"]:
+    for label in ["classical-baseline", "qrag[no-qaoa]", "qrag[full-mmr]", "qrag[full]"]:
         a = psys[label]["attack"]
         rows.append((label, f"{a['context_occupancy']:.4f}",
                      f"{a['clean_context_rate']:.4f}",
                      f"{a['top_k_hit_rate']:.4f}"))
     table(s, Inches(1.95), ["system on the poisoned corpus", "context occupancy",
                             "clean-context rate", "top-10 hit rate"], rows,
-          widths=widths, row_h=Inches(0.36), emphasis={2: (POSITIVE, True)})
+          widths=widths, row_h=Inches(0.34), emphasis={3: (POSITIVE, True)})
     _text(s, MARGIN, Inches(3.72), CONTENT_W, Inches(0.8), size=15,
           spacing=1.2)[2].text = (
         f"Occupancy falls {g('poison.occ_noqaoa')} → {g('poison.occ_full')}, "
         f"a reduction of {g('poison.qaoa_effect')} attributable to the redundancy "
-        f"penalty alone — the two arms differ in that term and nothing else.")
+        f"stage. Greedy MMR remains at {g('poison.occ_mmr')} and does not reproduce it.")
     _rule(s, Inches(4.42))
     _text(s, MARGIN, Inches(4.58), CONTENT_W, Inches(0.35), size=13,
           bold=True, colour=NEGATIVE)[2].text = \

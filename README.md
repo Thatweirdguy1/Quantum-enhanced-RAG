@@ -9,7 +9,7 @@ that each stage can be shown to be *doing nothing* if that is the truth.
 
 > **Honest summary up front.** This project simulates quantum circuits on a
 > classical machine with numpy and qiskit-aer. It cannot and does not claim a
-> speed-up: the full pipeline is **30.7× slower** than its own classical baseline.
+> speed-up: the full pipeline is **38.1× slower** than its own classical baseline.
 > And on the headline question it set out to answer, the result is **negative** —
 > across 300 SciFact queries and seven system configurations, no quantum arm beats
 > the tuned classical baseline on nDCG@10 with a confidence interval excluding zero.
@@ -77,7 +77,7 @@ and none is significant. One cell of 30 reaches p < 0.05 (`qrag[kernel]` recall@
 a finding. The kernel passed both pre-registered gates on held-out pairs and then
 did not transfer to the full corpus. That is the result.
 
-**2. Grover: 4.64× fewer oracle queries, 8.98× simulation overhead.** Both numbers
+**2. Grover: 4.64× fewer oracle queries, 7.99× simulation overhead.** Both numbers
 are reported in adjacent columns because the first is a complexity property and the
 second is what simulating it costs. `qrag[grover]` scores *identically* to the
 baseline on every retrieval metric to floating point — amplitude amplification here
@@ -85,15 +85,16 @@ selects from an already-scored shortlist and returns the classical ordering, so 
 contributes nothing to ranking quality and is not presented as if it does.
 
 **3. QAOA: 0.9978 mean solution quality, exact optimum on 78.7% of queries** against
-brute force over the same feasible set, at 1,122 ms/query for the QAOA stage alone
-(1,191 ms/query for the whole pipeline). It is the most expensive stage by a factor
-of thirty and buys no retrieval gain on a clean corpus.
+brute force over the same feasible set, at 857 ms/query for the QAOA stage alone
+(915 ms/query for the whole pipeline). It is 14.6× slower than the other pipeline
+stages combined and buys no retrieval gain on a clean corpus.
 
 **4. Security: the one positive result, and it is narrow.** On a corpus poisoned with
 400 passages across four attack families, adversarial context occupancy falls from
 **0.984** (`qrag[no-qaoa]`) to **0.796** (`qrag[full]`) — a 0.188 reduction
 attributable to the redundancy penalty, isolated by an ablation that differs in that
-term alone. The honest framing matters: 0.796 is still catastrophic. Every one of
+term alone. A classical greedy-MMR control remains at **0.980**, so it does not
+reproduce the QAOA selection result. The honest framing matters: 0.796 is still catastrophic. Every one of
 the 50 targeted queries was hit, no query received a clean context, and the pattern
 detector caught **100% of instruction-injection and 0% of the other three families**.
 QAOA measurably reduced the attacker's yield and did not come close to defeating the

@@ -335,11 +335,11 @@ configuration hash and seed reproduce the run.
 
 {{n_systems}} configurations: the classical baseline; the kernel alone; kernel plus
 interference; Grover alone; QAOA alone; kernel plus QAOA; and the full pipeline. A
-further configuration, `qrag[no-qaoa]`, is run on the poisoned corpus only. Its sole
-purpose is to make the security hypothesis falsifiable: without an arm identical to
-the full pipeline except for the QAOA stage, a change in adversarial occupancy could
-be attributed to the kernel, to the interference rerank, or to the QAOA term, and
-there would be no way to tell which.
+Two further configurations are run on the poisoned corpus only. `qrag[no-qaoa]`
+makes the QAOA ablation falsifiable, while `qrag[full-mmr]` replaces QAOA with the
+standard greedy maximal-marginal-relevance heuristic at the same context size and
+redundancy weight. Together they distinguish the QAOA stage from both the upstream
+retriever and a cheap classical diversity control.
 
 ## 4.3 Metrics and significance
 
@@ -537,6 +537,7 @@ retrieval quality.
 |---|---|---|---|---|
 | classical-baseline | {{poisoned.systems.classical-baseline.attack.context_occupancy}} | {{poisoned.systems.classical-baseline.attack.clean_context_rate}} | {{poisoned.systems.classical-baseline.attack.top_k_hit_rate}} | {{poisoned.systems.classical-baseline.metrics_poisoned.ndcg@10}} |
 | qrag[no-qaoa] | {{poisoned.systems.qrag[no-qaoa].attack.context_occupancy}} | {{poisoned.systems.qrag[no-qaoa].attack.clean_context_rate}} | {{poisoned.systems.qrag[no-qaoa].attack.top_k_hit_rate}} | {{poisoned.systems.qrag[no-qaoa].metrics_poisoned.ndcg@10}} |
+| qrag[full-mmr] | {{poisoned.systems.qrag[full-mmr].attack.context_occupancy}} | {{poisoned.systems.qrag[full-mmr].attack.clean_context_rate}} | {{poisoned.systems.qrag[full-mmr].attack.top_k_hit_rate}} | {{poisoned.systems.qrag[full-mmr].metrics_poisoned.ndcg@10}} |
 | qrag[full] | {{poisoned.systems.qrag[full].attack.context_occupancy}} | {{poisoned.systems.qrag[full].attack.clean_context_rate}} | {{poisoned.systems.qrag[full].attack.top_k_hit_rate}} | {{poisoned.systems.qrag[full].metrics_poisoned.ndcg@10}} |
 
 [[CAPTION]] Table 5.5: {{poison.n_injected}} adversarial passages, {{poison.n_targets}} target queries, {{poison.n_families}} families. Judgments unmodified.
@@ -550,6 +551,11 @@ family are mutually similar, so a term that penalises selecting mutually similar
 passages selects fewer of them. This is the one place in the paper where a quantum
 stage does something a classical top-k selector does not, and it is why the ablation
 arm was included.
+
+The classical MMR control reaches {{poison.occ_mmr}} occupancy, only
+{{poison.qaoa_vs_mmr}} above the QAOA arm and effectively unchanged from the
+classical baseline. Thus this particular cheap greedy diversity heuristic does not
+reproduce the QAOA selection result on the measured attack.
 
 **What the result does not mean.** Four counterweights belong in the same paragraph
 as the number above.
@@ -620,16 +626,11 @@ like the baseline's, which is easy to describe as parity.
 The honest weighing is that a {{poison.qaoa_effect}} reduction in occupancy, obtained
 at {{qaoa.ms}} ms/query and conditional on discarding
 {{clean.qrag[full].quantum.qaoa.mean_feasible_probability|2f}} of the readout mass, is
-not a good trade for a practitioner. A classical diversity-aware selector such as MMR
-(Carbonell and Goldstein, 1998) implements the same objective at negligible cost. Our
-own codebase contains one — `rerank_greedy_mmr`, greedily maximising relevance minus
-the maximum similarity to the already-selected set, over the identical QUBO — and it
-is used in the solver comparison but was **not** run as an arm of the poisoned-corpus
-experiment. The missing comparison is therefore a missing run, not a missing
-implementation, which makes it both the cheapest and the most important item of
-further work: it is the measurement most likely to reduce Section 5.5 from a result
-about QAOA to a result about the objective. We state this rather than leaving the
-reader to assume the comparison was considered and rejected.
+not automatically a good trade for a practitioner. The cheap classical MMR control
+(Carbonell and Goldstein, 1998) was run over the same candidates, context size and
+redundancy weight, but its {{poison.occ_mmr}} occupancy did not reproduce QAOA's
+{{poison.occ_full}}. This rules out the simplest classical-diversity explanation,
+not every classical optimiser or attack distribution.
 
 What the arm does establish is narrower and still worth having: the redundancy term,
 not the kernel and not the interference rerank, is the component that moves
@@ -687,10 +688,10 @@ applicable.
 
 # 8. Conclusion and further work
 
-> **Status note.** This section is a draft. The empirical sections above (3 through
-> 7) are complete against the experiment of record; the items below are scoped but
-> not executed, and the generation-stage evaluation in particular is not yet built.
-> This paper is submitted as partially complete for that reason.
+> **Status note.** The retrieval and poisoned-corpus experiments are complete,
+> including the classical MMR control. Grounded answer generation and an independent
+> judge are implemented and live-tested; corpus-scale generation evaluation remains
+> future work.
 
 We built a RAG pipeline with three simulated quantum stages and measured it against a
 baseline designed to be hard to beat. The retrieval result is null: {{sig.count}} of
@@ -707,20 +708,18 @@ is run on it. Our global kernel measured {{gate_a.tau_global_before}} on that te
 
 Work remaining, in the order we would do it:
 
-1. **The missing classical arm.** `rerank_greedy_mmr` at the same *k* and the same
-   redundancy weight, run on the poisoned corpus. The solver already exists; only the
-   experiment arm is missing. If MMR achieves a comparable occupancy reduction at
-   negligible cost — which we expect — then Section 5.5's result is a statement about
-   the objective, not about QAOA, and should be rewritten as such.
+1. **Broader classical optimiser controls.** Greedy MMR did not reproduce the QAOA
+   occupancy reduction. Exact QUBO selection and stronger classical heuristics should
+   be run before attributing the difference to quantum optimisation rather than to
+   solver behaviour.
 2. **Shot accounting for the feasibility filter.** The {{qaoa.quality}} quality figure
    post-selects on the {{qaoa.feasible_prob|2f}} of readout mass that satisfies the
    cardinality constraint. A hard-constrained ansatz, or an XY-mixer restricted to the
    fixed-Hamming-weight subspace, would remove the filter; failing that, the shot
    multiplier belongs in the cost accounting of Table 5.4.
-3. **Generation-stage evaluation.** The pipeline retrieves and selects but the
-   end-to-end answer-generation and answer-relevancy evaluation (Es et al., 2024;
-   Chen et al., 2024) is not built. Until it is, "RAG" describes the architecture and
-   not the measurement, and downstream faithfulness under poisoning is unmeasured.
+3. **Generation-stage evaluation.** Grounded Ollama generation and an independent
+   answer-relevancy judge are implemented, but a corpus-scale faithfulness experiment
+   (Es et al., 2024; Chen et al., 2024) remains unmeasured.
 4. **A second corpus.** At least one with a weaker lexical baseline, to test whether
    the null result is a property of SciFact.
 5. **A diversified attacker.** Injections spread across topics and phrasings, to test

@@ -331,12 +331,12 @@ def section_poison(exp: dict) -> list[str]:
     for label, block in poison["systems"].items():
         a, m = block["attack"], block["metrics_poisoned"]
         rank = a["median_first_adv_rank"]
-        deg = block["degradation_vs_clean"].get("ndcg@10")
+        deg = block.get("degradation_vs_clean", {}).get("ndcg@10")
         out.append(
             f"| `{label}` | {_fmt(a['context_occupancy'])} | "
             f"{_fmt(a['clean_context_rate'])} | {_fmt(a['top_k_hit_rate'])} | "
             f"{_fmt(rank, 1) if rank else 'none'} | {_fmt(m.get('ndcg@10'))} | "
-            f"{_signed(deg)} |")
+            f"{_signed(deg) if deg is not None else 'n/a'} |")
 
     out += ["", "### Per-family share of occupied context slots", "",
             "| system | " + " | ".join(man["families"]) + " |",
@@ -378,6 +378,8 @@ def section_poison(exp: dict) -> list[str]:
         no_q = systems["qrag[no-qaoa]"]["attack"]["context_occupancy"]
         full = systems["qrag[full]"]["attack"]["context_occupancy"]
         base = systems["classical-baseline"]["attack"]["context_occupancy"]
+        mmr = systems.get("qrag[full-mmr]", {}).get("attack", {}).get(
+            "context_occupancy")
         delta = no_q - full
         out += [
             "### Verdict on the QAOA redundancy hypothesis",
@@ -390,6 +392,8 @@ def section_poison(exp: dict) -> list[str]:
             "",
             f"- classical baseline occupancy: {_fmt(base)}",
             f"- `qrag[no-qaoa]` occupancy: {_fmt(no_q)}",
+            *([f"- `qrag[full-mmr]` occupancy: {_fmt(mmr)}"]
+              if mmr is not None else []),
             f"- `qrag[full]` occupancy: {_fmt(full)}",
             f"- **attributable to QAOA: {_signed(delta)}** "
             f"({'supports' if delta > 0 else 'does NOT support'} the hypothesis)",
@@ -404,6 +408,15 @@ def section_poison(exp: dict) -> list[str]:
                "reported as such."),
             "",
         ]
+        if mmr is not None:
+            out += [
+                "The classical greedy-MMR control reached "
+                f"{mmr:.4f} occupancy, versus {full:.4f} for QAOA. It did not "
+                "reproduce QAOA's reduction on this attack, so the measured "
+                "effect is not explained by substituting this standard greedy "
+                "diversity heuristic.",
+                "",
+            ]
     return out
 
 

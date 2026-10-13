@@ -235,6 +235,7 @@ class Facts:
                 "poison.n_families": len(man.get("families", []) or []),
                 "poison.occ_base": occ("classical-baseline"),
                 "poison.occ_noqaoa": occ("qrag[no-qaoa]"),
+                "poison.occ_mmr": occ("qrag[full-mmr]"),
                 "poison.occ_full": occ("qrag[full]"),
                 "poison.clean_rate_full":
                     psys.get("qrag[full]", {}).get("attack", {})
@@ -253,6 +254,9 @@ class Facts:
             if no_q is not None and fl is not None:
                 # The single number the security claim rests on. Defined once.
                 named["poison.qaoa_effect"] = no_q - fl
+            mmr = occ("qrag[full-mmr]")
+            if mmr is not None and fl is not None:
+                named["poison.qaoa_vs_mmr"] = mmr - fl
 
             det = man.get("detector", {})
             if det:

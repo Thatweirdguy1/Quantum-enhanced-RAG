@@ -18,10 +18,10 @@ Cite these whenever a table is reproduced. Same command + same seed gives
 the same numbers; a different config hash means the table is from a
 different experiment and must not be mixed with these.
 
-- config hash: `da66cb43af5b`
+- config hash: `3c20010b2476`
 - seed: `20260720` (every stage)
-- git commit: `not-a-git-repo`
-- python 3.13.14, numpy 2.4.3
+- git commit: `e95418f`
+- python 3.13.15, numpy 2.5.4
 - platform: Windows-11-10.0.26200-SP0
 - dataset: **scifact/test** -- 5183 documents, 300 queries, 339 relevance judgments
 - source: `results/experiment.json`
@@ -79,13 +79,13 @@ is a tuned system rather than a strawman with a missing term.
 
 | system | recall@10 | ndcg@10 | mrr@10 | recall@5 | ndcg@5 | recall@20 | ms/query |
 |---|---|---|---|---|---|---|---|
-| `classical-baseline` | 0.8411 | 0.7152 | 0.6829 | 0.7849 | 0.6953 | 0.8686 | 38.8 |
-| `qrag[kernel]` | 0.8371 | 0.7163 | 0.6849 | 0.8022 | 0.7026 | 0.8812 | 39.5 |
-| `qrag[kernel+interf]` | 0.8489 | 0.7149 | 0.6805 | 0.7902 | 0.6943 | 0.8786 | 49.0 |
-| `qrag[grover]` | 0.8411 | 0.7152 | 0.6829 | 0.7849 | 0.6953 | 0.8686 | 36.6 |
-| `qrag[qaoa]` | 0.8411 | 0.7136 | 0.6816 | 0.7687 | 0.6878 | 0.8686 | 1343.5 |
-| `qrag[kernel+qaoa]` | 0.8371 | 0.7141 | 0.6827 | 0.7862 | 0.6948 | 0.8812 | 1161.0 |
-| `qrag[full]` | 0.8489 | 0.7140 | 0.6799 | 0.7855 | 0.6907 | 0.8786 | 1191.0 |
+| `classical-baseline` | 0.8411 | 0.7152 | 0.6829 | 0.7849 | 0.6953 | 0.8686 | 24.0 |
+| `qrag[kernel]` | 0.8371 | 0.7163 | 0.6849 | 0.8022 | 0.7026 | 0.8812 | 26.5 |
+| `qrag[kernel+interf]` | 0.8489 | 0.7149 | 0.6805 | 0.7902 | 0.6943 | 0.8786 | 38.7 |
+| `qrag[grover]` | 0.8411 | 0.7152 | 0.6829 | 0.7849 | 0.6953 | 0.8686 | 24.4 |
+| `qrag[qaoa]` | 0.8411 | 0.7136 | 0.6816 | 0.7687 | 0.6878 | 0.8686 | 897.6 |
+| `qrag[kernel+qaoa]` | 0.8371 | 0.7141 | 0.6827 | 0.7862 | 0.6948 | 0.8812 | 986.8 |
+| `qrag[full]` | 0.8489 | 0.7140 | 0.6799 | 0.7855 | 0.6907 | 0.8786 | 915.3 |
 
 **`qrag[grover]` scores identically to the baseline on every retrieval metric, to floating point.** That is not a coincidence and not a bug: amplitude amplification here selects from a shortlist that has already been scored classically, and the ordering it returns is the classical ordering. Grover in this pipeline demonstrates an oracle-query complexity property on a real workload and contributes nothing to ranking quality. Any document presenting it as a retrieval improvement is misreporting this table.
 
@@ -138,7 +138,7 @@ running that count on a classical statevector costs.
 - 6 qubits over 64.0 shortlisted candidates, 13.0 marked on average
 - **oracle queries: 1.00** vs **4.64** expected for classical scanning -> **4.64x** reduction
 - success probability: 0.972
-- simulation cost: 0.07 ms/query, 8.98x overhead vs the classical scan it replaces
+- simulation cost: 0.05 ms/query, 7.99x overhead vs the classical scan it replaces
 
 ### QAOA -- `qrag[qaoa]`
 
@@ -147,7 +147,7 @@ running that count on a classical statevector costs.
 - **hit the exact optimum on 76.7% of queries**; largest objective gap 0.1075
 - feasible probability at readout: 0.401
 - **redundancy: 0.6059 (top-k by score) -> 0.5736 (QAOA), a reduction of 0.0323; lower on 73.0% of queries**
-- simulation cost: 1277 ms/query
+- simulation cost: 853 ms/query
 
 ### QAOA -- `qrag[kernel+qaoa]`
 
@@ -156,14 +156,14 @@ running that count on a classical statevector costs.
 - **hit the exact optimum on 76.7% of queries**; largest objective gap 0.1052
 - feasible probability at readout: 0.401
 - **redundancy: 0.6017 (top-k by score) -> 0.5694 (QAOA), a reduction of 0.0323; lower on 74.3% of queries**
-- simulation cost: 1102 ms/query
+- simulation cost: 937 ms/query
 
 ### Grover -- `qrag[full]`
 
 - 6 qubits over 64.0 shortlisted candidates, 13.0 marked on average
 - **oracle queries: 1.00** vs **4.64** expected for classical scanning -> **4.64x** reduction
 - success probability: 0.972
-- simulation cost: 0.07 ms/query, 8.03x overhead vs the classical scan it replaces
+- simulation cost: 0.05 ms/query, 6.81x overhead vs the classical scan it replaces
 
 ### QAOA -- `qrag[full]`
 
@@ -172,19 +172,19 @@ running that count on a classical statevector costs.
 - **hit the exact optimum on 78.7% of queries**; largest objective gap 0.1265
 - feasible probability at readout: 0.400
 - **redundancy: 0.6130 (top-k by score) -> 0.5777 (QAOA), a reduction of 0.0353; lower on 78.7% of queries**
-- simulation cost: 1122 ms/query
+- simulation cost: 857 ms/query
 
 ## 6. Latency -- the honest column
 
 | system | ms/query | vs baseline | seconds for the full run |
 |---|---|---|---|
-| `classical-baseline` | 38.8 | 1.0x | 11.7 |
-| `qrag[kernel]` | 39.5 | 1.0x | 11.9 |
-| `qrag[kernel+interf]` | 49.0 | 1.3x | 14.8 |
-| `qrag[grover]` | 36.6 | 0.9x | 11.1 |
-| `qrag[qaoa]` | 1343.5 | 34.6x | 403.1 |
-| `qrag[kernel+qaoa]` | 1161.0 | 29.9x | 348.4 |
-| `qrag[full]` | 1191.0 | 30.7x | 357.4 |
+| `classical-baseline` | 24.0 | 1.0x | 7.3 |
+| `qrag[kernel]` | 26.5 | 1.1x | 8.0 |
+| `qrag[kernel+interf]` | 38.7 | 1.6x | 11.9 |
+| `qrag[grover]` | 24.4 | 1.0x | 7.4 |
+| `qrag[qaoa]` | 897.6 | 37.4x | 269.3 |
+| `qrag[kernel+qaoa]` | 986.8 | 41.1x | 296.1 |
+| `qrag[full]` | 915.3 | 38.1x | 274.6 |
 
 **No wall-clock speed-up is claimed anywhere.** A statevector simulator
 cannot beat the classical routine it simulates; the slowdown above is the
@@ -201,6 +201,7 @@ oracle-query result in section 5 cannot be mistaken for a timing result.
 |---|---|---|---|---|---|---|
 | `classical-baseline` | 0.9800 | 0.0000 | 1.0000 | 1.0 | 0.6040 | -0.1112 |
 | `qrag[no-qaoa]` | 0.9840 | 0.0000 | 1.0000 | 1.0 | 0.6047 | n/a |
+| `qrag[full-mmr]` | 0.9800 | 0.0000 | 1.0000 | 1.0 | 0.6056 | n/a |
 | `qrag[full]` | 0.7960 | 0.0000 | 1.0000 | 1.0 | 0.6060 | -0.1081 |
 
 ### Per-family share of occupied context slots
@@ -209,6 +210,7 @@ oracle-query result in section 5 cannot be mistaken for a timing result.
 |---|---|---|---|---|
 | `classical-baseline` | 0.0367 | 0.4041 | 0.3673 | 0.1918 |
 | `qrag[no-qaoa]` | 0.0325 | 0.4024 | 0.3577 | 0.2073 |
+| `qrag[full-mmr]` | 0.0245 | 0.4041 | 0.3551 | 0.2163 |
 | `qrag[full]` | 0.0302 | 0.4975 | 0.3970 | 0.0754 |
 
 ### Pattern detector on the injected text
@@ -235,10 +237,13 @@ The hypothesis was that the redundancy penalty `lambda * sum_{i<j} s_ij x_i x_j`
 
 - classical baseline occupancy: 0.9800
 - `qrag[no-qaoa]` occupancy: 0.9840
+- `qrag[full-mmr]` occupancy: 0.9800
 - `qrag[full]` occupancy: 0.7960
 - **attributable to QAOA: +0.1880** (supports the hypothesis)
 
 Wording that is permitted: QAOA reranking reduced adversarial context occupancy by 0.1880 relative to the otherwise identical pipeline without it, on a single corpus and a single attack budget.
+
+The classical greedy-MMR control reached 0.9800 occupancy, versus 0.7960 for QAOA. It did not reproduce QAOA's reduction on this attack, so the measured effect is not explained by substituting this standard greedy diversity heuristic.
 
 ## 8. Verification status
 

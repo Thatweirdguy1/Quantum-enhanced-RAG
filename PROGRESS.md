@@ -2,17 +2,13 @@
 
 Resume file. If the session died, this plus the git log is enough to pick up.
 
-Updated after each deliverable is committed and pushed. Last update: 26 Aug 2026,
-early morning, ahead of the 07:25 cutoff.
+Updated after each deliverable is committed and pushed. Last update: 13 Oct 2026,
+after the full MMR-control rerun.
 
-## Hard constraints in force
+## Historical run constraints
 
-- **07:25 cutoff.** Laptop leaves at 07:30. Stop starting new work at 07:25, commit
-  and push everything, print a status block.
-- **No new timed experiment run after 06:45.** `perf_counter` keeps counting through
-  a suspend, so any `latency_ms` or `run_seconds` from a run that straddles the
-  shutdown is corrupt. `results/experiment.json` is already complete — do not re-run
-  it. `scripts/verify.py` is *not* timed and is safe to run at any point.
+- The 26 Aug 07:25 laptop cutoff no longer applies. The experiment was rerun
+  uninterrupted on 13 Oct to add the greedy-MMR poisoned-corpus control.
 - **Every number in the paper, deck and diary is read from `results/*.json`,** never
   typed. Enforced by `docs/facts.py`: documents contain `{{token}}` placeholders and
   an unknown token fails the build.
@@ -83,13 +79,9 @@ early morning, ahead of the 07:25 cutoff.
    (`qrag/qaoa.py:255-262`). Quoting 0.9978 without the 0.40 overstates the routine:
    on hardware it implies ~2.5x the shots for the same answer. Both now appear in
    the same table.
-8. **`rerank_greedy_mmr` exists but was never run as an experiment arm.** The
-   classical diversity-aware selector that would test whether the security result is
-   about QAOA or merely about the redundancy objective is already implemented
-   (`qrag/qaoa.py:132`) and is used in the solver comparison, but there is no MMR
-   entry anywhere in `results/experiment.json`. The paper states this as a missing
-   run rather than a missing implementation, and it is the first item of further
-   work.
+8. **The missing greedy-MMR control has now been run.** `qrag[full-mmr]` reaches
+   0.9800 adversarial context occupancy, versus 0.7960 for `qrag[full]`; the cheap
+   classical heuristic does not reproduce QAOA's reduction on this attack.
 
 ## The headline results, so a resumed session does not have to re-derive them
 
@@ -100,12 +92,12 @@ Read from `results/experiment.json`. Full detail in `FACTS.md`.
   p = 0.047); with 30 comparisons that is noise and is not claimed as a finding.
   The kernel passed both pre-registered gates on 137 held-out pairs and did not
   transfer to 300 queries.
-- **Grover: 4.64x fewer oracle queries, 8.98x simulation overhead.** Scores
+- **Grover: 4.64x fewer oracle queries, 7.99x simulation overhead.** Scores
   bit-identical to the baseline on every retrieval metric — it selects from an
   already-scored shortlist, so it contributes nothing to ranking quality.
 - **QAOA: 0.9978 mean solution quality**, exact optimum on 78.7% of queries, at
-  ~1,122 ms/query simulated. That is 94.2% of the pipeline's per-query latency,
-  16.3x the other four stages combined and 28.9x the classical baseline's entire
+  ~857 ms/query simulated. That is 93.6% of the pipeline's per-query latency,
+  14.6x the other four stages combined and 35.7x the classical baseline's entire
   per-query cost — three different ratios, all now `qaoa.share`, `qaoa.vs_rest` and
   `qaoa.vs_base` tokens rather than an approximate "factor of thirty".
 - **Security: the one positive result, and it is narrow.** Adversarial context
@@ -114,7 +106,7 @@ Read from `results/experiment.json`. Full detail in `FACTS.md`.
   alone. 0.7960 is still catastrophic: all 50 targeted queries hit, no clean
   context, detector catches 100% of instruction-injection and 0% of the other three
   families.
-- **Full pipeline is 30.7x slower than its own classical baseline.** No speed-up is
+- **Full pipeline is 38.1x slower than its own classical baseline.** No speed-up is
   claimed anywhere.
 - **QAOA quality is post-selected.** 0.9978 is the quality of the best *feasible*
   decoded selection; feasible readout mass is only 0.40. On hardware that is ~2.5x
