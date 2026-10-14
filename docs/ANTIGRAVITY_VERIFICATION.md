@@ -5,13 +5,13 @@
 **Target Repository:** `c:\Users\prabh\Downloads\QERAG`
 **Git HEAD Tested:** `6899d36` (*Align SRS and paper with PolyForm Noncommercial license*)
 **Submission Archive Tested:** `build/Q-RAG_Submission_2026-10-15.zip` (32,303,921 bytes / ~30.8 MB)
-**Overall Verdict:** **Automated checks pass; live workbench and human layout review remain open.**
+**Overall Verdict:** **Automated checks and live SciFact workbench smoke test pass; human layout review remains open.**
 
 ---
 
 ## 1. Executive Summary & Verification Matrix
 
-The tested archive, automated checks, CI, and code inspection passed. These checks do not establish that the workbench launches with its model dependencies or that the documents look correct to a human reader.
+The tested archive, automated checks, and CI passed. A subsequent live Streamlit smoke test with the installed Ollama models also passed. These checks do not establish that the documents look correct to a human reader.
 
 | Verification Item | Target Standard | Observed Result | Verdict |
 |---|---|---|---|
@@ -21,7 +21,7 @@ The tested archive, automated checks, CI, and code inspection passed. These chec
 | **GitHub Actions CI (`ci.yml`)** | Commit `6899d36` clean | Run #8: `completed`, conclusion: `success` (Ubuntu & Windows) | **PASS** |
 | **GitHub CodeQL Analysis** | Extended scanning clean | Run #26: `completed`, conclusion: `success` (0 open alerts) | **PASS** |
 | **License Alignment (Tracked)** | PolyForm Noncommercial 1.0.0 | Verified in `LICENSE`, `README.md`, `docs/research_paper.md`, `deliverables/` | **PASS** |
-| **Streamlit Modes & Features** | Workbench, Ingestion, Fallbacks | Static code inspection confirms 5 tabs and the documented paths; no live UI run recorded | **PARTIAL** |
+| **Streamlit Modes & Features** | Workbench, Ingestion, Fallbacks | Live SciFact Full Q-RAG retrieval, three-mode comparison, generation, and separate-model judge passed; upload path was not exercised | **PARTIAL** |
 | **Deliverables & PDF Previews** | Document integrity & page counts | PDF page counts: Paper 27, Lit Review 39, Diary 9; human visual review not recorded | **PARTIAL** |
 | **Stitch Mockup Licensing** | Must not claim MIT if published | Line 495 of untracked `about_methodology/code.html` claims MIT | **DEFECT (Low)** |
 
@@ -144,7 +144,11 @@ Generated deliverables were checked for text and structure. PDF page counts are 
 
 ---
 
-## 7. Prioritized Defect Register
+## 7. Subsequent live workbench smoke test (15 October 2026)
+
+Streamlit launched on `127.0.0.1:8501` with installed `bge-m3:latest`, `qwen3.5:latest`, and `deepseek-r1:8b` Ollama models. In the browser, the SciFact question “Does vitamin D supplementation reduce mortality?” returned five ranked passages in Full Q-RAG mode (9,532.0 ms retrieval time, 98 candidates). The Compare modes action completed and displayed its results table. With “Generate and judge answer” enabled, the same question produced a cited answer and an independent judge result (relevance 0.90, grounded: yes). Generation took substantially longer than retrieval. TXT/PDF upload, its fallback behavior, and the CSV download interaction were not exercised in this smoke test.
+
+## 8. Prioritized Defect Register
 
 | Defect ID | Severity | Location | Description | Recommended Remediation |
 |---|---|---|---|---|
@@ -155,6 +159,6 @@ Generated deliverables were checked for text and structure. PDF page counts are 
 
 ---
 
-## 8. Final Recommendation
+## 9. Final Recommendation
 
-The automated test, security, CI, and archive checks pass. Before calling the complete project submission-ready, launch the Streamlit workbench with its required model weights and inspect the final document pages, TOCs, and logos visually. Do not include the untracked Stitch mockup without correcting its license claim.
+The automated test, security, CI, archive, and live SciFact workbench checks pass. Before calling the complete project submission-ready, inspect the final document pages, TOCs, and logos visually; an upload/CSV interaction check is also advisable. Do not include the untracked Stitch mockup without correcting its license claim.
