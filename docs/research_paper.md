@@ -666,6 +666,10 @@ adequate for anything finer.
 
 # 7. Reproducibility
 
+The software source is publicly available under the PolyForm Noncommercial
+License 1.0.0. It is not offered under MIT; permitted uses and distribution are
+governed by the repository's `LICENSE` file.
+
 The experiment of record is a single configuration, hashed and recorded in every
 result file, together with the interpreter version, numpy version, platform and seed.
 Configuration `{{config_hash}}`, seed `{{seed}}`, Python {{python}}, numpy

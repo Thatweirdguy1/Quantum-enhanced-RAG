@@ -2,8 +2,8 @@
 
 Resume file. If the session died, this plus the git log is enough to pick up.
 
-Updated after each deliverable is committed and pushed. Last update: 14 Oct 2026,
-for the software follow-up below.
+Updated after each deliverable is committed and pushed. Last update: 15 Oct 2026,
+for the licensing decision below.
 
 ## Software follow-up in progress — 14 Oct 2026
 
@@ -19,9 +19,8 @@ for the software follow-up below.
   selections. The SRS wording on "failure to converge" needs revision or a
   different stopping policy; automatically discarding those selections would
   change the research question and its reported results.
-- The SRS says MIT or equivalent, but the repository already uses PolyForm
-  Noncommercial. Licensing needs an explicit team decision; the existing license
-  was preserved.
+- The project uses PolyForm Noncommercial License 1.0.0. The SRS and paper were
+  corrected on 15 Oct to match the repository license; no relicensing occurred.
 
 ## Historical run constraints
 
@@ -150,9 +149,8 @@ Before submitting, check the final document render:
    still needed. The 20-page literature review minimum is met on this renderer.
 3. **Have a teammate rerun the project independently.** This has not been
    evidenced; do not claim it as complete.
-4. **Confirm the submission/licensing choice.** The SRS says MIT or equivalent,
-   while the existing repository license is PolyForm Noncommercial. Do not
-   change it without an explicit team decision.
+4. **Check licensing consistency in the final exports.** The user selected the
+   existing PolyForm Noncommercial License 1.0.0; the SRS and paper now match.
 5. **Keep a second copy of the local submission ZIP.**
    `build/Q-RAG_Submission_2026-10-14.zip` contains tracked source and reports,
    cached SciFact data/embeddings, and three PDF previews. It excludes Ollama
