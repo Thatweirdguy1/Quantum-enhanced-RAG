@@ -274,7 +274,7 @@ def create_app(pipeline=None, dataset=None, embedder=None, generator=None, judge
         query = validate_query(body.query)
         top_k = validate_top_k(body.top_k)
         # Log the digest, never the query.
-        LOG.info("search corr=%s q=%s k=%d", correlation, fingerprint(query), top_k)
+        LOG.info("search corr=%s q=%s", correlation, fingerprint(query))
 
         pipeline, embedder = services["pipeline"], services["embedder"]
         dataset = services["dataset"]
