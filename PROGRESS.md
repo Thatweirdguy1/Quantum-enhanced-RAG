@@ -10,11 +10,11 @@ for the software follow-up below.
 - Streamlit dark workbench is pushed: live Classical / Kernel / Full modes,
   grounded answer and independent judge, recorded evaluation and security views,
   and ranked-passage CSV export.
-- SRS follow-up now implements session-local TXT/PDF ingestion with overlapping
+- SRS follow-up implements session-local TXT/PDF ingestion with overlapping
   chunks, in-memory FAISS/BM25 indexing, Grover bypass for tiny corpora, and a
-  numerical-failure QAOA fallback. The evaluation runner now records per-query
-  latency, ranks, and scores in a structured CSV. A full committed-code rerun is
-  required before updating the experiment of record and dependent documents.
+  numerical-failure QAOA fallback. The evaluation runner records per-query
+  latency, ranks, and scores in a structured CSV. The full experiment was rerun
+  and the result files and dependent documents were refreshed on 14 Oct.
 - COBYLA routinely uses its iteration budget while producing finite feasible
   selections. The SRS wording on "failure to converge" needs revision or a
   different stopping policy; automatically discarding those selections would
@@ -39,7 +39,7 @@ for the software follow-up below.
 |---|---|---|---|
 | 1 | Source-of-truth facts file | `FACTS.md`, `scripts/build_facts.py`, `docs/facts.py` | **done, pushed** |
 | 2 | README + SECURITY | `README.md`, `SECURITY.md` | **done, pushed** |
-| 3 | Daily diary DOCX | `docs/daily_diary.md` -> `build/Q-RAG_Daily_Diary.docx` | **done** (61 facts substituted, 9 pages in Word on 14 Oct) |
+| 3 | Daily diary DOCX | `docs/daily_diary.md` -> `build/Q-RAG_Daily_Diary.docx` | **done** (dated October postscript, 9 pages in Word on 14 Oct) |
 | 4 | 10-slide PPTX | `docs/slides.py` -> `build/Q-RAG_Slides.pptx` | **done, pushed** (10 slides, every figure via `docs.facts`) |
 | 5 | Research paper DOCX | `docs/research_paper.md` -> `build/Q-RAG_Research_Paper.docx` | **done** (27 pages in Word on 14 Oct; measurements substituted from facts) |
 | 6 | Literature review DOCX | `docs/literature_review.md` -> `build/Q-RAG_Literature_Review.docx` | **done** (39 pages in Word on 14 Oct; exceeds the 20-page minimum) |
@@ -132,8 +132,10 @@ Read from `results/experiment.json`. Full detail in `FACTS.md`.
 
 ## What is next
 
-All six deliverables are done, committed and pushed as of 07:22 on 26 Aug 2026,
-ahead of the 07:25 cutoff. Nothing is blocked and nothing is half-written.
+The software, experiment evidence, and document sources are committed and pushed.
+GitHub CI and CodeQL passed on commit `3a3e771` on 14 Oct. Four older CodeQL
+alerts were still open and are being remediated. The 16 Oct submission checks
+below still need final confirmation.
 
 Before submitting, check the final document render:
 

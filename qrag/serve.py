@@ -210,11 +210,12 @@ def create_app(pipeline=None, dataset=None, embedder=None, generator=None, judge
         try:
             response = await call_next(request)
         except SecurityError as exc:
-            # Refusals are the caller's fault and safe to name: they carry a limit,
-            # never a path or an internal.
-            LOG.info("refused corr=%s: %s", correlation, exc)
+            # Exception text is not an API contract: a future subclass might
+            # include a path, secret or traceback. Only fixed messages leave here.
+            LOG.info("refused corr=%s type=%s", correlation, type(exc).__name__)
             status = 413 if isinstance(exc, ResourceLimitExceeded) else 400
-            return _finish(_error(status, str(exc), correlation), request)
+            message = "resource limit exceeded" if status == 413 else "invalid request"
+            return _finish(_error(status, message, correlation), request)
         except Exception:
             # The traceback goes to the log with the correlation id; the client
             # gets the id and nothing else. That pairing is the whole point of

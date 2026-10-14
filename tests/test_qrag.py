@@ -763,6 +763,25 @@ def test_errors_carry_a_correlation_id_and_no_internals():
     assert len(resp.headers["X-Correlation-Id"]) == 12
 
 
+def test_security_exception_text_never_reaches_client():
+    from fastapi.testclient import TestClient
+    from qrag.security import SecurityError
+    from qrag.serve import create_app
+
+    app = create_app()
+
+    @app.get("/probe-refusal")
+    def probe_refusal():
+        raise SecurityError("Traceback /private/key sk-" + "A" * 30)
+
+    response = TestClient(app).get("/probe-refusal")
+    assert response.status_code == 400
+    assert response.json()["error"] == "invalid request"
+    assert "Traceback" not in response.text
+    assert "/private/key" not in response.text
+    assert "sk-" not in response.text
+
+
 def test_docs_are_disabled_in_production():
     import importlib
     import os

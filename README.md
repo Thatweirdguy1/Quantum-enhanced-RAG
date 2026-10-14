@@ -33,7 +33,7 @@ that each stage can be shown to be *doing nothing* if that is the truth.
 | **Phase kernel** | Block-local fidelity kernel `K = Σ_g w_g |Σ_{i∈g} qᵢdᵢe^{iθᵢ}|²`, trained with InfoNCE and hand-derived analytic gradients (no autodiff) | Trained and passes both gates — see below. Overfits: 1024 free phases against 919 training pairs |
 | **Interference reranking** | Sub-query decomposition with decaying weights | Working, small effect |
 | **Grover amplification** | Threshold oracle over a pre-scored shortlist | Working. Reported as **oracle queries**, never as wall clock |
-| **QAOA reranking** | Selection QUBO `min −Σrᵢxᵢ + λΣ_{i<j}sᵢⱼxᵢxⱼ + μ(Σxᵢ−k)²`, COBYLA, 3 restarts, exact brute-force optimum computed alongside for a true quality figure | Working, and the most expensive stage by far (~1.1 s/query simulated) |
+| **QAOA reranking** | Selection QUBO `min −Σrᵢxᵢ + λΣ_{i<j}sᵢⱼxᵢxⱼ + μ(Σxᵢ−k)²`, COBYLA, 3 restarts, exact brute-force optimum computed alongside for a true quality figure | Working, and the most expensive stage by far (~913 ms/query in the full arm) |
 | **Adversarial arm** | Four attack families injected into the corpus, `qrels` untouched | Working, and the detector's blind spot is measured rather than hidden |
 | **Demo API** | FastAPI, hardened to the supplied pre-deploy checklist | Working, deliberately minimal. See [SECURITY.md](SECURITY.md) |
 | **Research workbench** | Streamlit UI for live queries, mode comparison, recorded evaluation, and security results | Working locally; uses cached SciFact index and Ollama for live queries |
@@ -80,7 +80,7 @@ and none is significant. One cell of 30 reaches p < 0.05 (`qrag[kernel]` recall@
 a finding. The kernel passed both pre-registered gates on held-out pairs and then
 did not transfer to the full corpus. That is the result.
 
-**2. Grover: 4.64× fewer oracle queries, 7.99× simulation overhead.** Both numbers
+**2. Grover: 4.64× fewer oracle queries, 8.14× simulation overhead.** Both numbers
 are reported in adjacent columns because the first is a complexity property and the
 second is what simulating it costs. `qrag[grover]` scores *identically* to the
 baseline on every retrieval metric to floating point — amplitude amplification here
@@ -89,7 +89,7 @@ contributes nothing to ranking quality and is not presented as if it does.
 
 **3. QAOA: 0.9978 mean solution quality, exact optimum on 78.7% of queries** against
 brute force over the same feasible set, at 913 ms/query for the QAOA stage alone
-(915 ms/query for the whole pipeline). It is 14.6× slower than the other pipeline
+(978 ms/query for the whole pipeline). It is 13.9× slower than the other pipeline
 stages combined and buys no retrieval gain on a clean corpus.
 
 **4. Security: the one positive result, and it is narrow.** On a corpus poisoned with

@@ -212,20 +212,23 @@ def check_log_hygiene() -> Check:
     buf = StringIO()
     handler = logging.StreamHandler(buf)
     handler.addFilter(RedactingFilter())
-    logger = logging.getLogger("qrag.audit.probe")
-    logger.handlers = [handler]
-    logger.propagate = False
-    logger.setLevel(logging.INFO)
-
     secret = "sk-" + "A" * 30
     email = "patient@hospital.example"
     # Three shapes, because a filter that only redacts arguments misses the first
     # one: the credential is split across the format string and its argument, so
     # neither fragment matches on its own while the emitted line leaks in full.
-    logger.info("token sk-%s and mail %s", "A" * 30, email)          # split
-    logger.info("token %s and mail %s", secret, email)               # whole in arg
-    logger.info("token %(k)s", {"k": secret})                        # dict args
-    logger.info("literal %s %s", secret, email)
+    # Build synthetic records and send them through the real handler/filter.
+    # Probe credentials must never enter the process's ordinary log stream.
+    for message, args in (
+        ("token sk-%s and mail %s", ("A" * 30, email)),
+        ("token %s and mail %s", (secret, email)),
+        ("token %(k)s", {"k": secret}),
+        ("literal %s %s", (secret, email)),
+    ):
+        record = logging.makeLogRecord({"name": "qrag.audit.probe",
+                                        "levelno": logging.INFO,
+                                        "msg": message, "args": args})
+        handler.handle(record)
     written = buf.getvalue()
 
     leaks = []

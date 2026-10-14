@@ -6,7 +6,7 @@ authors: Prabhav Goel; Saksham Singh; Sameen Ur Rehman
 supervisor: Dr Rani (Project Guide)
 department: Department of Computer Science and Engineering
 institution: Amity School of Engineering and Technology
-date: August 2026
+date: October 2026
 footer: Q-RAG Literature Review
 ---
 

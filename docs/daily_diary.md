@@ -6,14 +6,15 @@ authors: Prabhav Goel; Saksham Singh; Sameen Ur Rehman
 supervisor: Dr Rani (Project Guide)
 department: Department of Computer Science and Engineering
 institution: Amity School of Engineering and Technology
-date: August 2026
+date: October 2026
 footer: Q-RAG Daily Diary
 ---
 
 # Daily Work Diary
 
-Weeks 1 to 6, Monday 20 July 2026 to Wednesday 26 August 2026. Week 6 is in
-progress at the time of writing; entries stop at Wednesday 26 August.
+Weeks 1 to 6, Monday 20 July 2026 to Wednesday 26 August 2026. The daily
+entries stop at Wednesday 26 August; a dated postscript records later verified
+repository milestones without presenting them as daily diary entries.
 
 Every measured figure quoted in this diary is read directly from
 `results/experiment.json` and `results/kernel_training.json` when the document is
@@ -96,10 +97,9 @@ Adversarial arm, security hardening, and the experiment of record.
 | 22 Aug | Sat | Added `qrag[no-qaoa]`, the ablation control that makes the security hypothesis falsifiable. Without it, any drop in adversarial occupancy could be credited to the kernel instead. |
 | 23 Aug | Sun | Ran the experiment of record: {{n_systems}} configurations over all {{n_queries}} queries, paired bootstrap with 2,000 resamples, plus the poisoned arm. |
 
-## Week 6 — Monday 24 to Wednesday 26 August (in progress)
+## Week 6 — Monday 24 to Wednesday 26 August (partial record)
 
-Reading the results honestly and writing them up. This week is not finished; entries
-end on Wednesday 26 August.
+Reading the results honestly and writing them up. Entries end on Wednesday 26 August.
 
 | Date | Day | Work done |
 |---|---|---|
@@ -131,6 +131,15 @@ attack, and the pattern detector catches
 {{detector.instruction-injection|pct}} of instruction injection but
 {{detector.topical-mimicry|pct}} of fluent topical mimicry.
 
-**Verification, re-run on the last day rather than remembered:**
+**Verification, re-run for the October report rather than remembered:**
 {{tests.passed}} tests pass, and the security audit reports {{audit.passed}} passed,
 {{audit.failed}} failed, {{audit.warned}} warned, {{audit.na}} not applicable.
+
+## Postscript — verified repository milestones after the daily entries
+
+This is a dated development summary, not a reconstruction of unrecorded daily work.
+
+| Date | Verifiable milestone |
+|---|---|
+| 13 Oct 2026 | Added grounded answer generation, the independent answer judge and API runtime loading; completed the greedy-MMR control run. |
+| 14 Oct 2026 | Added the dark Streamlit workbench, TXT/PDF ingestion, per-query CSV export and CI; reran the complete experiment and published the result files. |

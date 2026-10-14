@@ -174,7 +174,7 @@ def build(out: Path = OUT) -> Path:
         "Prabhav Goel  |  Group 165  |  B.Tech CSE"
     _text(s, MARGIN, Inches(6.0), CONTENT_W, Inches(0.4), size=12,
           colour=MUTED)[2].text = \
-        "Amity School of Engineering and Technology  |  August 2026"
+        "Amity School of Engineering and Technology  |  October 2026"
     footer(s, 1, prov)
 
     # 2 ------------------------------------------------------- the honest headline
