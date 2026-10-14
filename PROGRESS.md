@@ -39,10 +39,10 @@ for the software follow-up below.
 |---|---|---|---|
 | 1 | Source-of-truth facts file | `FACTS.md`, `scripts/build_facts.py`, `docs/facts.py` | **done, pushed** |
 | 2 | README + SECURITY | `README.md`, `SECURITY.md` | **done, pushed** |
-| 3 | Daily diary DOCX | `docs/daily_diary.md` -> `build/Q-RAG_Daily_Diary.docx` | **done** (dated October postscript, 9 pages in Word on 14 Oct) |
-| 4 | 10-slide PPTX | `docs/slides.py` -> `build/Q-RAG_Slides.pptx` | **done, pushed** (10 slides, every figure via `docs.facts`) |
-| 5 | Research paper DOCX | `docs/research_paper.md` -> `build/Q-RAG_Research_Paper.docx` | **done** (27 pages in Word on 14 Oct; measurements substituted from facts) |
-| 6 | Literature review DOCX | `docs/literature_review.md` -> `build/Q-RAG_Literature_Review.docx` | **done** (39 pages in Word on 14 Oct; exceeds the 20-page minimum) |
+| 3 | Daily diary DOCX | `docs/daily_diary.md` -> `deliverables/Q-RAG_Daily_Diary.docx` | **done** (dated October postscript, 9 pages in Word on 14 Oct) |
+| 4 | 10-slide PPTX | `docs/slides.py` -> `deliverables/Q-RAG_Slides.pptx` | **done** (10 slides, every figure via `docs.facts`) |
+| 5 | Research paper DOCX | `docs/research_paper.md` -> `deliverables/Q-RAG_Research_Paper.docx` | **done** (27 pages in Word on 14 Oct; measurements substituted from facts) |
+| 6 | Literature review DOCX | `docs/literature_review.md` -> `deliverables/Q-RAG_Literature_Review.docx` | **done** (39 pages in Word on 14 Oct; exceeds the 20-page minimum) |
 
 ## What deliverable 1 actually contains
 
@@ -53,7 +53,7 @@ for the software follow-up below.
 - `docs/facts.py` resolves `{{token}}` placeholders in document sources at render
   time. `python -m docs.facts` lists every available token and its current value.
 - `scripts/verify.py` runs the test suite and the security audit and records what
-  they returned in `results/verification.json`, so the "79 tests pass, 16 audit
+  they returned in `results/verification.json`, so the "80 tests pass, 16 audit
   checks pass" figures are read rather than remembered.
 
 ## Things found while building it (all fixed, none papered over)

@@ -249,7 +249,7 @@ The classical greedy-MMR control reached 0.9800 occupancy, versus 0.7960 for QAO
 
 Both are re-runnable and both must be re-run before the report is submitted, because a stale pass is worse than no claim.
 
-- `python -m pytest tests -q` -> **79 passed**
+- `python -m pytest tests -q` -> **80 passed**
 - `python -m scripts.security_audit` -> **16 passed, 0 failed, 0 warned, 8 not applicable**
 
 Three defects in this project's own code were found by those two harnesses and are written up in `SECURITY.md`: dead request validation on the demo API, a credential that could be logged in full while passing the redaction filter, and two unbounded `2**n` allocations behind a ceiling that could not fire. A fourth -- an inverted QAOA quality metric -- was found the same way.

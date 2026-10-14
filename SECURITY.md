@@ -273,10 +273,10 @@ that.
 | 1 | Authentication & access control | Bearer token, constant-time compare, mandatory in production. No accounts by design (NA-1, NA-2, NA-6) |
 | 2 | Secrets & environment variables | SEC-1 – SEC-4. `.env.example` with 17 documented variables; rotation warning in README |
 | 3 | Data & database | No database (NA-5). Corpus is public, read-only. Data flow mapped under check 2 |
-| 4 | Error handling & screen states | PROD-2. Typed hierarchy under `SecurityError`; generic client messages + correlation id; refusal messages carry a limit, never a path or traceback |
+| 4 | Error handling & screen states | PROD-2. Typed hierarchy under `SecurityError`; fixed client messages + correlation id; exception text never reaches the response |
 | 5 | Hosting & deployment | Local/single-node scope, stated as such. No cloud deployment is claimed |
-| 6 | Version control & code quality | PROD-1: 53 tracked files, 4.68 MB at the 14 Oct audit. Embeddings and corpora are gitignored and regenerated, not committed. PROD-4: all 18 direct requirements carry a version constraint |
-| 7 | Testing & QA | 79 tests. PROD-3: every run seeded (`seed=20260720`) and every result file traceable — an experiment result embeds the config hash that reproduces it, a verification artefact embeds the commit it ran against, and a file carrying neither is flagged |
+| 6 | Version control & code quality | PROD-1 checks tracked-file size; embeddings and corpora are gitignored and regenerated, not committed. PROD-4: all 18 direct requirements carry a version constraint |
+| 7 | Testing & QA | 80 tests. PROD-3: every run seeded (`seed=20260720`) and every result file traceable — an experiment result embeds the config hash that reproduces it, a verification artefact embeds the commit it ran against, and a file carrying neither is flagged |
 | 8 | Performance & optimisation | SEC-7 resource ceilings. Latency is reported honestly: the statevector simulator is **35.2× slower** than the classical baseline on the 14 Oct run and no wall-clock win is claimed. Grover is reported as an **oracle-query** result with simulation overhead in an adjacent column |
 | 9 | Maintenance & monitoring | Structured logging with correlation ids; `/healthz`; the audit script is re-runnable as a gate |
 | 10 | Legal & compliance | BEIR SciFact is public research data under its own licence. No personal data is collected (NA-7), so there is no GDPR subject-access or deletion obligation to implement |

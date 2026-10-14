@@ -108,6 +108,12 @@ attack.
 
 ## Setup
 
+The October submission documents are in [`deliverables/`](deliverables/): editable
+Word reports with updated contents tables and the 10-slide PowerPoint deck. Their
+sources remain in `docs/`; `python -m docs.build all` and
+`python -m docs.slides` regenerate them. PDF previews are local in `build/` and
+are not needed to run the software.
+
 Requires Python 3.11+ and a running [Ollama](https://ollama.com) daemon.
 
 ```bash
@@ -278,7 +284,7 @@ scripts/
   run_experiment.py    the experiment of record
   security_audit.py    16 checks + 8 declared N/A, exits non-zero on failure
 tests/
-  test_qrag.py     79 tests: quantum correctness, kernel algebra, security controls
+  test_qrag.py     80 tests: quantum correctness, kernel algebra, security controls
 results/           measured numbers, tracked in git so tables can be checked
 ```
 
