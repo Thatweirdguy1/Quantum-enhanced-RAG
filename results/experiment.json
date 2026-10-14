@@ -1,7 +1,7 @@
 {
   "provenance": {
     "config_hash": "3c20010b2476",
-    "git_commit": "e95418f",
+    "git_commit": "fec3256",
     "python": "3.13.15",
     "platform": "Windows-11-10.0.26200-SP0",
     "numpy": "2.5.4",
@@ -101,8 +101,8 @@
         "recall@20": 0.8685555555555555,
         "recall@3": 0.7166111111111112,
         "recall@5": 0.7848888888888887,
-        "latency_ms_mean": 24.00351199399059,
-        "latency_ms_p95": 41.96616510162132
+        "latency_ms_mean": 27.777114678174257,
+        "latency_ms_p95": 55.01876998459922
       },
       "per_query": {
         "1": {
@@ -5807,7 +5807,7 @@
         }
       },
       "quantum": {},
-      "run_seconds": 7.259516000049189
+      "run_seconds": 8.39542519999668
     },
     "qrag[kernel]": {
       "metrics": {
@@ -5828,8 +5828,8 @@
         "recall@20": 0.8812222222222222,
         "recall@3": 0.7277222222222222,
         "recall@5": 0.8021666666666667,
-        "latency_ms_mean": 26.525311679579318,
-        "latency_ms_p95": 44.7489200043492
+        "latency_ms_mean": 33.09122666095694,
+        "latency_ms_p95": 62.16097017750145
       },
       "per_query": {
         "1": {
@@ -11538,7 +11538,7 @@
           "fidelity"
         ]
       },
-      "run_seconds": 8.016164700035006
+      "run_seconds": 9.994866499910131
     },
     "qrag[kernel+interf]": {
       "metrics": {
@@ -11559,8 +11559,8 @@
         "recall@20": 0.8785555555555555,
         "recall@3": 0.7142777777777778,
         "recall@5": 0.7901666666666666,
-        "latency_ms_mean": 38.71971833597248,
-        "latency_ms_p95": 56.75665513845162
+        "latency_ms_mean": 50.25023000314832,
+        "latency_ms_p95": 77.8192648314871
       },
       "per_query": {
         "1": {
@@ -17269,7 +17269,7 @@
           "interference-3views"
         ]
       },
-      "run_seconds": 11.89604220003821
+      "run_seconds": 15.31123650004156
     },
     "qrag[grover]": {
       "metrics": {
@@ -17290,8 +17290,8 @@
         "recall@20": 0.8685555555555555,
         "recall@3": 0.7166111111111112,
         "recall@5": 0.7848888888888887,
-        "latency_ms_mean": 24.35629633332913,
-        "latency_ms_p95": 41.804255021270365
+        "latency_ms_mean": 34.694058005698025,
+        "latency_ms_p95": 69.83478997135535
       },
       "per_query": {
         "1": {
@@ -23005,11 +23005,11 @@
           "mean_classical_expected_queries": 4.642857142857144,
           "mean_query_reduction_factor": 4.642857142857144,
           "mean_success_probability": 0.97198486328125,
-          "mean_wall_clock_ms": 0.05432632829373082,
-          "mean_simulation_overhead": 7.993884394884671
+          "mean_wall_clock_ms": 0.06698333270226915,
+          "mean_simulation_overhead": 8.144152836221057
         }
       },
-      "run_seconds": 7.363890299806371
+      "run_seconds": 10.474838000023738
     },
     "qrag[qaoa]": {
       "metrics": {
@@ -23030,8 +23030,8 @@
         "recall@20": 0.8685555555555555,
         "recall@3": 0.7106111111111111,
         "recall@5": 0.7686666666666667,
-        "latency_ms_mean": 897.5789939984679,
-        "latency_ms_p95": 1098.0810651672073
+        "latency_ms_mean": 984.185687006296,
+        "latency_ms_p95": 1207.083995069843
       },
       "per_query": {
         "1": {
@@ -28748,14 +28748,14 @@
           "max_objective_gap": 0.10749425598943674,
           "mean_feasible_probability": 0.40056954760757024,
           "mean_optimiser_calls": 360.0,
-          "mean_wall_clock_ms": 853.2956500103077,
+          "mean_wall_clock_ms": 927.6412740000524,
           "mean_redundancy_qaoa": 0.5735827777783076,
           "mean_redundancy_topk": 0.6058698079983393,
           "mean_redundancy_reduction": 0.03228703022003174,
           "fraction_less_redundant": 0.73
         }
       },
-      "run_seconds": 269.33501480007544
+      "run_seconds": 295.32164480001666
     },
     "qrag[kernel+qaoa]": {
       "metrics": {
@@ -28776,8 +28776,8 @@
         "recall@20": 0.8812222222222222,
         "recall@3": 0.7160555555555556,
         "recall@5": 0.7861666666666668,
-        "latency_ms_mean": 986.842697331837,
-        "latency_ms_p95": 1215.49623508472
+        "latency_ms_mean": 989.7079026636978,
+        "latency_ms_p95": 1225.143235002179
       },
       "per_query": {
         "1": {
@@ -34494,7 +34494,7 @@
           "max_objective_gap": 0.1052116817879778,
           "mean_feasible_probability": 0.4007039249996213,
           "mean_optimiser_calls": 360.0,
-          "mean_wall_clock_ms": 937.3543849967731,
+          "mean_wall_clock_ms": 935.5628836690448,
           "mean_redundancy_qaoa": 0.5693775893251101,
           "mean_redundancy_topk": 0.6016512118776639,
           "mean_redundancy_reduction": 0.03227362255255381,
@@ -34504,7 +34504,7 @@
           "fidelity"
         ]
       },
-      "run_seconds": 296.11653429991566
+      "run_seconds": 296.9743143999949
     },
     "qrag[full]": {
       "metrics": {
@@ -34525,8 +34525,8 @@
         "recall@20": 0.8785555555555555,
         "recall@3": 0.7067777777777777,
         "recall@5": 0.7855,
-        "latency_ms_mean": 915.2948513370939,
-        "latency_ms_p95": 1057.0005798363127
+        "latency_ms_mean": 978.3826236659661,
+        "latency_ms_p95": 1142.7390750381164
       },
       "per_query": {
         "1": {
@@ -40240,8 +40240,8 @@
           "mean_classical_expected_queries": 4.642857142857144,
           "mean_query_reduction_factor": 4.642857142857144,
           "mean_success_probability": 0.97198486328125,
-          "mean_wall_clock_ms": 0.050852339093883835,
-          "mean_simulation_overhead": 6.81464561405037
+          "mean_wall_clock_ms": 0.057147006349017225,
+          "mean_simulation_overhead": 7.183363640060327
         },
         "qaoa": {
           "n_queries": 300,
@@ -40255,7 +40255,7 @@
           "max_objective_gap": 0.12654860205766738,
           "mean_feasible_probability": 0.4000308742120565,
           "mean_optimiser_calls": 360.0,
-          "mean_wall_clock_ms": 856.7294856673107,
+          "mean_wall_clock_ms": 912.8994076683497,
           "mean_redundancy_qaoa": 0.5777011069655419,
           "mean_redundancy_topk": 0.6130263904730479,
           "mean_redundancy_reduction": 0.03532528350750605,
@@ -40265,7 +40265,7 @@
           "interference-3views"
         ]
       },
-      "run_seconds": 274.6484069998842
+      "run_seconds": 293.5874848999083
     }
   },
   "significance": {
@@ -41890,8 +41890,8 @@
           "recall@20": 0.8602222222222222,
           "recall@3": 0.5596666666666666,
           "recall@5": 0.6365555555555555,
-          "latency_ms_mean": 32.65072434209287,
-          "latency_ms_p95": 58.52586494293066
+          "latency_ms_mean": 29.91051467290769,
+          "latency_ms_p95": 54.34436493087562
         },
         "attack": {
           "n_attacked_queries": 50,
@@ -41949,8 +41949,8 @@
           "recall@20": 0.8702222222222222,
           "recall@3": 0.5409444444444444,
           "recall@5": 0.6268333333333334,
-          "latency_ms_mean": 50.06116467217604,
-          "latency_ms_p95": 79.77594485273586
+          "latency_ms_mean": 44.60098332958296,
+          "latency_ms_p95": 67.85346491960809
         },
         "attack": {
           "n_attacked_queries": 50,
@@ -41992,8 +41992,8 @@
             "mean_classical_expected_queries": 4.642857142857144,
             "mean_query_reduction_factor": 4.642857142857144,
             "mean_success_probability": 0.97198486328125,
-            "mean_wall_clock_ms": 0.05808267121513685,
-            "mean_simulation_overhead": 7.374443586975582
+            "mean_wall_clock_ms": 0.05215133617942532,
+            "mean_simulation_overhead": 7.214949361115806
           },
           "kernel_mode": [
             "interference-3views"
@@ -42019,8 +42019,8 @@
           "recall@20": 0.8702222222222222,
           "recall@3": 0.5409444444444444,
           "recall@5": 0.6436666666666666,
-          "latency_ms_mean": 50.16891665834313,
-          "latency_ms_p95": 78.0908899847418
+          "latency_ms_mean": 43.234472998883575,
+          "latency_ms_p95": 66.93788991542533
         },
         "attack": {
           "n_attacked_queries": 50,
@@ -42062,12 +42062,12 @@
             "mean_classical_expected_queries": 4.642857142857144,
             "mean_query_reduction_factor": 4.642857142857144,
             "mean_success_probability": 0.97198486328125,
-            "mean_wall_clock_ms": 0.05524133409683903,
-            "mean_simulation_overhead": 6.881527438629061
+            "mean_wall_clock_ms": 0.050443668539325394,
+            "mean_simulation_overhead": 7.152216254652385
           },
           "mmr": {
             "n_queries": 300,
-            "mean_wall_clock_ms": 0.12775900540873408,
+            "mean_wall_clock_ms": 0.1209736669746538,
             "mean_redundancy_mmr": 0.6639886410037676,
             "mean_redundancy_topk": 0.6742330302794775,
             "mean_redundancy_reduction": 0.010244389275709788,
@@ -42097,8 +42097,8 @@
           "recall@20": 0.8702222222222222,
           "recall@3": 0.5409444444444444,
           "recall@5": 0.6996666666666667,
-          "latency_ms_mean": 947.0520103303716,
-          "latency_ms_p95": 1018.6784450663254
+          "latency_ms_mean": 929.7846383384118,
+          "latency_ms_p95": 998.2748749549501
         },
         "attack": {
           "n_attacked_queries": 50,
@@ -42140,8 +42140,8 @@
             "mean_classical_expected_queries": 4.642857142857144,
             "mean_query_reduction_factor": 4.642857142857144,
             "mean_success_probability": 0.97198486328125,
-            "mean_wall_clock_ms": 0.05540766675646106,
-            "mean_simulation_overhead": 6.874171320747446
+            "mean_wall_clock_ms": 0.05202599956343571,
+            "mean_simulation_overhead": 7.173666459659929
           },
           "qaoa": {
             "n_queries": 300,
@@ -42155,7 +42155,7 @@
             "max_objective_gap": 0.1505159068309183,
             "mean_feasible_probability": 0.39972734897859663,
             "mean_optimiser_calls": 360.0,
-            "mean_wall_clock_ms": 880.2063429906653,
+            "mean_wall_clock_ms": 868.864462999627,
             "mean_redundancy_qaoa": 0.6168488450845082,
             "mean_redundancy_topk": 0.6742330302794775,
             "mean_redundancy_reduction": 0.05738418519496918,

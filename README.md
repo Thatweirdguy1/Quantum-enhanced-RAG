@@ -3,13 +3,15 @@
 Semester-7 major project, Group 165, B.Tech CSE, Amity School of Engineering &
 Technology.
 
+Code is available under the repository's [PolyForm Noncommercial License](LICENSE).
+
 A hybrid retrieval pipeline that adds three quantum-simulated stages to a
 conventional RAG system, and — more importantly — a set of experiments designed so
 that each stage can be shown to be *doing nothing* if that is the truth.
 
 > **Honest summary up front.** This project simulates quantum circuits on a
 > classical machine with numpy and qiskit-aer. It cannot and does not claim a
-> speed-up: the full pipeline is **38.1× slower** than its own classical baseline.
+> speed-up: the full pipeline is **35.2× slower** than its own classical baseline.
 > And on the headline question it set out to answer, the result is **negative** —
 > across 300 SciFact queries and seven system configurations, no quantum arm beats
 > the tuned classical baseline on nDCG@10 with a confidence interval excluding zero.
@@ -86,7 +88,7 @@ selects from an already-scored shortlist and returns the classical ordering, so 
 contributes nothing to ranking quality and is not presented as if it does.
 
 **3. QAOA: 0.9978 mean solution quality, exact optimum on 78.7% of queries** against
-brute force over the same feasible set, at 857 ms/query for the QAOA stage alone
+brute force over the same feasible set, at 913 ms/query for the QAOA stage alone
 (915 ms/query for the whole pipeline). It is 14.6× slower than the other pipeline
 stages combined and buys no retrieval gain on a clean corpus.
 
@@ -276,7 +278,7 @@ scripts/
   run_experiment.py    the experiment of record
   security_audit.py    16 checks + 8 declared N/A, exits non-zero on failure
 tests/
-  test_qrag.py     68 tests: quantum correctness, kernel algebra, security controls
+  test_qrag.py     79 tests: quantum correctness, kernel algebra, security controls
 results/           measured numbers, tracked in git so tables can be checked
 ```
 

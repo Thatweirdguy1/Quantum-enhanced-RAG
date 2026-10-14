@@ -19,6 +19,9 @@ for the software follow-up below.
   selections. The SRS wording on "failure to converge" needs revision or a
   different stopping policy; automatically discarding those selections would
   change the research question and its reported results.
+- The SRS says MIT or equivalent, but the repository already uses PolyForm
+  Noncommercial. Licensing needs an explicit team decision; the existing license
+  was preserved.
 
 ## Historical run constraints
 
@@ -36,10 +39,10 @@ for the software follow-up below.
 |---|---|---|---|
 | 1 | Source-of-truth facts file | `FACTS.md`, `scripts/build_facts.py`, `docs/facts.py` | **done, pushed** |
 | 2 | README + SECURITY | `README.md`, `SECURITY.md` | **done, pushed** |
-| 3 | Daily diary DOCX | `docs/daily_diary.md` -> `build/Q-RAG_Daily_Diary.docx` | **done, pushed** (61 facts substituted, ~4 pages) |
+| 3 | Daily diary DOCX | `docs/daily_diary.md` -> `build/Q-RAG_Daily_Diary.docx` | **done** (61 facts substituted, 9 pages in Word on 14 Oct) |
 | 4 | 10-slide PPTX | `docs/slides.py` -> `build/Q-RAG_Slides.pptx` | **done, pushed** (10 slides, every figure via `docs.facts`) |
-| 5 | Research paper DOCX | `docs/research_paper.md` -> `build/Q-RAG_Research_Paper.docx` | **done, pushed** (~17 est. pages, 274 facts substituted, 0 hand-typed measurements) |
-| 6 | Literature review DOCX | `docs/literature_review.md` -> `build/Q-RAG_Literature_Review.docx` | **done, pushed** (11,146 words, ~24 est. pages vs. a 20-page requirement, ~90 verified references) |
+| 5 | Research paper DOCX | `docs/research_paper.md` -> `build/Q-RAG_Research_Paper.docx` | **done** (27 pages in Word on 14 Oct; measurements substituted from facts) |
+| 6 | Literature review DOCX | `docs/literature_review.md` -> `build/Q-RAG_Literature_Review.docx` | **done** (39 pages in Word on 14 Oct; exceeds the 20-page minimum) |
 
 ## What deliverable 1 actually contains
 
@@ -50,7 +53,7 @@ for the software follow-up below.
 - `docs/facts.py` resolves `{{token}}` placeholders in document sources at render
   time. `python -m docs.facts` lists every available token and its current value.
 - `scripts/verify.py` runs the test suite and the security audit and records what
-  they returned in `results/verification.json`, so the "68 tests pass, 16 audit
+  they returned in `results/verification.json`, so the "79 tests pass, 16 audit
   checks pass" figures are read rather than remembered.
 
 ## Things found while building it (all fixed, none papered over)
@@ -107,12 +110,12 @@ Read from `results/experiment.json`. Full detail in `FACTS.md`.
   p = 0.047); with 30 comparisons that is noise and is not claimed as a finding.
   The kernel passed both pre-registered gates on 137 held-out pairs and did not
   transfer to 300 queries.
-- **Grover: 4.64x fewer oracle queries, 7.99x simulation overhead.** Scores
+- **Grover: 4.64x fewer oracle queries, 8.14x simulation overhead.** Scores
   bit-identical to the baseline on every retrieval metric — it selects from an
   already-scored shortlist, so it contributes nothing to ranking quality.
 - **QAOA: 0.9978 mean solution quality**, exact optimum on 78.7% of queries, at
-  ~857 ms/query simulated. That is 93.6% of the pipeline's per-query latency,
-  14.6x the other four stages combined and 35.7x the classical baseline's entire
+  ~913 ms/query simulated. That is 93.3% of the pipeline's per-query latency,
+  13.9x the other four stages combined and 32.9x the classical baseline's entire
   per-query cost — three different ratios, all now `qaoa.share`, `qaoa.vs_rest` and
   `qaoa.vs_base` tokens rather than an approximate "factor of thirty".
 - **Security: the one positive result, and it is narrow.** Adversarial context
@@ -121,7 +124,7 @@ Read from `results/experiment.json`. Full detail in `FACTS.md`.
   alone. 0.7960 is still catastrophic: all 50 targeted queries hit, no clean
   context, detector catches 100% of instruction-injection and 0% of the other three
   families.
-- **Full pipeline is 38.1x slower than its own classical baseline.** No speed-up is
+- **Full pipeline is 35.2x slower than its own classical baseline.** No speed-up is
   claimed anywhere.
 - **QAOA quality is post-selected.** 0.9978 is the quality of the best *feasible*
   decoded selection; feasible readout mass is only 0.40. On hardware that is ~2.5x
@@ -132,31 +135,28 @@ Read from `results/experiment.json`. Full detail in `FACTS.md`.
 All six deliverables are done, committed and pushed as of 07:22 on 26 Aug 2026,
 ahead of the 07:25 cutoff. Nothing is blocked and nothing is half-written.
 
-Before submitting, two manual steps I could not do:
+Before submitting, check the final document render:
 
-1. **Fill the two placeholders.** `[ADD REMAINING GROUP 165 MEMBERS]` and
-   `[ADD SUPERVISOR NAME AND DESIGNATION]` appear in the front matter of the paper,
-   the literature review and the diary. Edit the `docs/*.md` sources, not the DOCX
-   files, then re-run `python -m docs.build all` so all three stay consistent.
-2. **Open each DOCX in Word to confirm pagination.** The page counts above are
-   python-docx estimates; it writes the file but does not lay it out. The 20-page
-   literature review requirement in particular should be eyeballed, and the TOC will
-   populate on first open because the field is written dirty.
+1. **Verify the front matter with the group.** The paper, literature review and
+   diary now use the names and project-guide role in the supplied SRS. The SRS
+   does not state Dr Rani's formal academic rank, so only "Project Guide" is used.
+2. **Review the visual layout and update the TOC in Word.** Automated Word
+   pagination returned 39 literature review, 27 paper and 9 diary pages on
+   14 Oct. The 20-page literature review minimum is met on this renderer.
 
 Rebuild everything at any time with:
 
-    python -m docs.build all && python docs/slides.py
+    python -m docs.build all && python -m docs.slides
 
 That is safe to run — it reads `results/*.json` and never re-runs the experiment.
 
 ## Known gaps, stated rather than hidden
 
-- Two placeholders in the literature review front matter I cannot fill and must not
-  invent: `[ADD REMAINING GROUP 165 MEMBERS]` and
-  `[ADD SUPERVISOR NAME AND DESIGNATION]`.
-- Page counts printed by `python -m docs.build` are estimates. python-docx writes
-  the file but does not lay it out, so the true count depends on the renderer that
-  opens it. Open the DOCX in Word to confirm the 20-page requirement.
+- The SRS names Dr Rani as project guide but gives no academic rank. Confirm any
+  required formal title before submission.
+- Page counts depend on the renderer. Word reported 39/27/9 pages for the
+  literature review/paper/diary on this machine; visual layout and TOC updates
+  still need a human final pass before submission.
 - `qrag/generate.py` and `/answer` provide grounded Ollama generation plus an
   independent-model relevance/grounding judgement. The module-level API now loads
   the cached corpus embeddings and trained kernel automatically at startup.

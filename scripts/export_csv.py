@@ -14,6 +14,12 @@ from pathlib import Path
 def export_csv(source: Path, target: Path) -> int:
     data = json.loads(source.read_text(encoding="utf8"))
     clean = data["clean"]
+    arms = (("clean", clean),
+            ("poisoned", data.get("poisoned", {}).get("systems", {})))
+    for arm, systems in arms:
+        for system, block in systems.items():
+            if set(block.get("per_query", {})) != set(block.get("query_details", {})):
+                raise ValueError(f"{arm}/{system} lacks per-query retrieval traces; rerun the experiment")
     metrics = sorted({key for block in clean.values()
                       for row in block["per_query"].values() for key in row})
     columns = ["arm", "system", "query_id", "config_hash", "seed", "latency_ms",
@@ -22,8 +28,6 @@ def export_csv(source: Path, target: Path) -> int:
     with target.open("w", encoding="utf8", newline="") as fh:
         writer = csv.DictWriter(fh, fieldnames=columns)
         writer.writeheader()
-        arms = (("clean", clean),
-                ("poisoned", data.get("poisoned", {}).get("systems", {})))
         for arm, systems in arms:
             for system, block in systems.items():
                 details = block.get("query_details", {})

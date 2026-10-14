@@ -2,8 +2,8 @@
 title: Quantum-Enhanced Retrieval-Augmented Generation
 subtitle: A Critical Literature Review
 degree: Submitted in partial fulfilment of the requirements for the degree of Bachelor of Technology in Computer Science and Engineering
-authors: Prabhav Goel; [ADD REMAINING GROUP 165 MEMBERS]
-supervisor: [ADD SUPERVISOR NAME AND DESIGNATION]
+authors: Prabhav Goel; Saksham Singh; Sameen Ur Rehman
+supervisor: Dr Rani (Project Guide)
 department: Department of Computer Science and Engineering
 institution: Amity School of Engineering and Technology
 date: August 2026

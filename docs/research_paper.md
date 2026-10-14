@@ -2,8 +2,8 @@
 title: Quantum-Enhanced Retrieval-Augmented Generation
 subtitle: A Measured Evaluation of Three Simulated Quantum Stages
 degree: Semester-7 Major Project, Group 165, B.Tech Computer Science and Engineering
-authors: Prabhav Goel; [ADD REMAINING GROUP 165 MEMBERS]
-supervisor: [ADD SUPERVISOR NAME AND DESIGNATION]
+authors: Prabhav Goel; Saksham Singh; Sameen Ur Rehman
+supervisor: Dr Rani (Project Guide)
 department: Department of Computer Science and Engineering
 institution: Amity School of Engineering and Technology
 date: August 2026

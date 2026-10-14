@@ -20,7 +20,7 @@ different experiment and must not be mixed with these.
 
 - config hash: `3c20010b2476`
 - seed: `20260720` (every stage)
-- git commit: `e95418f`
+- git commit: `fec3256`
 - python 3.13.15, numpy 2.5.4
 - platform: Windows-11-10.0.26200-SP0
 - dataset: **scifact/test** -- 5183 documents, 300 queries, 339 relevance judgments
@@ -79,13 +79,13 @@ is a tuned system rather than a strawman with a missing term.
 
 | system | recall@10 | ndcg@10 | mrr@10 | recall@5 | ndcg@5 | recall@20 | ms/query |
 |---|---|---|---|---|---|---|---|
-| `classical-baseline` | 0.8411 | 0.7152 | 0.6829 | 0.7849 | 0.6953 | 0.8686 | 24.0 |
-| `qrag[kernel]` | 0.8371 | 0.7163 | 0.6849 | 0.8022 | 0.7026 | 0.8812 | 26.5 |
-| `qrag[kernel+interf]` | 0.8489 | 0.7149 | 0.6805 | 0.7902 | 0.6943 | 0.8786 | 38.7 |
-| `qrag[grover]` | 0.8411 | 0.7152 | 0.6829 | 0.7849 | 0.6953 | 0.8686 | 24.4 |
-| `qrag[qaoa]` | 0.8411 | 0.7136 | 0.6816 | 0.7687 | 0.6878 | 0.8686 | 897.6 |
-| `qrag[kernel+qaoa]` | 0.8371 | 0.7141 | 0.6827 | 0.7862 | 0.6948 | 0.8812 | 986.8 |
-| `qrag[full]` | 0.8489 | 0.7140 | 0.6799 | 0.7855 | 0.6907 | 0.8786 | 915.3 |
+| `classical-baseline` | 0.8411 | 0.7152 | 0.6829 | 0.7849 | 0.6953 | 0.8686 | 27.8 |
+| `qrag[kernel]` | 0.8371 | 0.7163 | 0.6849 | 0.8022 | 0.7026 | 0.8812 | 33.1 |
+| `qrag[kernel+interf]` | 0.8489 | 0.7149 | 0.6805 | 0.7902 | 0.6943 | 0.8786 | 50.3 |
+| `qrag[grover]` | 0.8411 | 0.7152 | 0.6829 | 0.7849 | 0.6953 | 0.8686 | 34.7 |
+| `qrag[qaoa]` | 0.8411 | 0.7136 | 0.6816 | 0.7687 | 0.6878 | 0.8686 | 984.2 |
+| `qrag[kernel+qaoa]` | 0.8371 | 0.7141 | 0.6827 | 0.7862 | 0.6948 | 0.8812 | 989.7 |
+| `qrag[full]` | 0.8489 | 0.7140 | 0.6799 | 0.7855 | 0.6907 | 0.8786 | 978.4 |
 
 **`qrag[grover]` scores identically to the baseline on every retrieval metric, to floating point.** That is not a coincidence and not a bug: amplitude amplification here selects from a shortlist that has already been scored classically, and the ordering it returns is the classical ordering. Grover in this pipeline demonstrates an oracle-query complexity property on a real workload and contributes nothing to ranking quality. Any document presenting it as a retrieval improvement is misreporting this table.
 
@@ -138,7 +138,7 @@ running that count on a classical statevector costs.
 - 6 qubits over 64.0 shortlisted candidates, 13.0 marked on average
 - **oracle queries: 1.00** vs **4.64** expected for classical scanning -> **4.64x** reduction
 - success probability: 0.972
-- simulation cost: 0.05 ms/query, 7.99x overhead vs the classical scan it replaces
+- simulation cost: 0.07 ms/query, 8.14x overhead vs the classical scan it replaces
 
 ### QAOA -- `qrag[qaoa]`
 
@@ -147,7 +147,7 @@ running that count on a classical statevector costs.
 - **hit the exact optimum on 76.7% of queries**; largest objective gap 0.1075
 - feasible probability at readout: 0.401
 - **redundancy: 0.6059 (top-k by score) -> 0.5736 (QAOA), a reduction of 0.0323; lower on 73.0% of queries**
-- simulation cost: 853 ms/query
+- simulation cost: 928 ms/query
 
 ### QAOA -- `qrag[kernel+qaoa]`
 
@@ -156,14 +156,14 @@ running that count on a classical statevector costs.
 - **hit the exact optimum on 76.7% of queries**; largest objective gap 0.1052
 - feasible probability at readout: 0.401
 - **redundancy: 0.6017 (top-k by score) -> 0.5694 (QAOA), a reduction of 0.0323; lower on 74.3% of queries**
-- simulation cost: 937 ms/query
+- simulation cost: 936 ms/query
 
 ### Grover -- `qrag[full]`
 
 - 6 qubits over 64.0 shortlisted candidates, 13.0 marked on average
 - **oracle queries: 1.00** vs **4.64** expected for classical scanning -> **4.64x** reduction
 - success probability: 0.972
-- simulation cost: 0.05 ms/query, 6.81x overhead vs the classical scan it replaces
+- simulation cost: 0.06 ms/query, 7.18x overhead vs the classical scan it replaces
 
 ### QAOA -- `qrag[full]`
 
@@ -172,19 +172,19 @@ running that count on a classical statevector costs.
 - **hit the exact optimum on 78.7% of queries**; largest objective gap 0.1265
 - feasible probability at readout: 0.400
 - **redundancy: 0.6130 (top-k by score) -> 0.5777 (QAOA), a reduction of 0.0353; lower on 78.7% of queries**
-- simulation cost: 857 ms/query
+- simulation cost: 913 ms/query
 
 ## 6. Latency -- the honest column
 
 | system | ms/query | vs baseline | seconds for the full run |
 |---|---|---|---|
-| `classical-baseline` | 24.0 | 1.0x | 7.3 |
-| `qrag[kernel]` | 26.5 | 1.1x | 8.0 |
-| `qrag[kernel+interf]` | 38.7 | 1.6x | 11.9 |
-| `qrag[grover]` | 24.4 | 1.0x | 7.4 |
-| `qrag[qaoa]` | 897.6 | 37.4x | 269.3 |
-| `qrag[kernel+qaoa]` | 986.8 | 41.1x | 296.1 |
-| `qrag[full]` | 915.3 | 38.1x | 274.6 |
+| `classical-baseline` | 27.8 | 1.0x | 8.4 |
+| `qrag[kernel]` | 33.1 | 1.2x | 10.0 |
+| `qrag[kernel+interf]` | 50.3 | 1.8x | 15.3 |
+| `qrag[grover]` | 34.7 | 1.2x | 10.5 |
+| `qrag[qaoa]` | 984.2 | 35.4x | 295.3 |
+| `qrag[kernel+qaoa]` | 989.7 | 35.6x | 297.0 |
+| `qrag[full]` | 978.4 | 35.2x | 293.6 |
 
 **No wall-clock speed-up is claimed anywhere.** A statevector simulator
 cannot beat the classical routine it simulates; the slowdown above is the
@@ -249,7 +249,7 @@ The classical greedy-MMR control reached 0.9800 occupancy, versus 0.7960 for QAO
 
 Both are re-runnable and both must be re-run before the report is submitted, because a stale pass is worse than no claim.
 
-- `python -m pytest tests -q` -> **75 passed**
+- `python -m pytest tests -q` -> **79 passed**
 - `python -m scripts.security_audit` -> **16 passed, 0 failed, 0 warned, 8 not applicable**
 
 Three defects in this project's own code were found by those two harnesses and are written up in `SECURITY.md`: dead request validation on the demo API, a credential that could be logged in full while passing the redaction filter, and two unbounded `2**n` allocations behind a ceiling that could not fire. A fourth -- an inverted QAOA quality metric -- was found the same way.

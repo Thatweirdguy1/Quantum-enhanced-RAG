@@ -153,6 +153,12 @@ def test_experiment_csv_keeps_query_metrics_and_retrieval_trace(tmp_path):
     assert row["ndcg@10"] == "0.5"
     assert json.loads(row["ranked_doc_ids"]) == ["d1"]
     assert row["latency_ms"] == "12.3"
+    source.write_text(json.dumps({
+        "provenance": {"config_hash": "abc", "seed": 7},
+        "clean": {"classical-baseline": {"per_query": {"q1": {"ndcg@10": 0.5}}}},
+    }), encoding="utf8")
+    with pytest.raises(ValueError, match="lacks per-query retrieval traces"):
+        export_csv(source, target)
 
 
 def test_runtime_query_vectors_are_validated_and_normalised():
