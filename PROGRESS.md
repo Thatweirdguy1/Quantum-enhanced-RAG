@@ -133,18 +133,30 @@ Read from `results/experiment.json`. Full detail in `FACTS.md`.
 ## What is next
 
 The software, experiment evidence, and document sources are committed and pushed.
-GitHub CI and CodeQL passed on commit `3a3e771` on 14 Oct. Four older CodeQL
-alerts were still open and are being remediated. The 16 Oct submission checks
-below still need final confirmation.
+GitHub CI passed on commit `98c9c43` on 14 Oct. Extended CodeQL also scanned
+that commit and reports **0 open, 5 closed** alerts. The live cached-corpus
+`/search` and `/answer` paths returned 200, including generation and an
+independent judge response. The 16 Oct submission checks below still need
+final confirmation.
 
 Before submitting, check the final document render:
 
 1. **Verify the front matter with the group.** The paper, literature review and
    diary now use the names and project-guide role in the supplied SRS. The SRS
    does not state Dr Rani's formal academic rank, so only "Project Guide" is used.
-2. **Review the visual layout and update the TOC in Word.** Automated Word
+2. **Review the visual layout in Word.** Automated Word
    pagination returned 39 literature review, 27 paper and 9 diary pages on
-   14 Oct. The 20-page literature review minimum is met on this renderer.
+   14 Oct; TOC fields were updated and PDFs exported. A human visual pass is
+   still needed. The 20-page literature review minimum is met on this renderer.
+3. **Have a teammate rerun the project independently.** This has not been
+   evidenced; do not claim it as complete.
+4. **Confirm the submission/licensing choice.** The SRS says MIT or equivalent,
+   while the existing repository license is PolyForm Noncommercial. Do not
+   change it without an explicit team decision.
+5. **Keep a second copy of the local submission ZIP.**
+   `build/Q-RAG_Submission_2026-10-14.zip` contains tracked source and reports,
+   cached SciFact data/embeddings, and three PDF previews. It excludes Ollama
+   model weights, which must be installed separately.
 
 Rebuild everything at any time with:
 
