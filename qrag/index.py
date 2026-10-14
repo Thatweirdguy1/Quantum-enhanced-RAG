@@ -43,6 +43,7 @@ class DenseIndex:
 
     def search(self, query_vec: np.ndarray, top_k: int) -> tuple[list[str], np.ndarray]:
         q = np.ascontiguousarray(query_vec.reshape(1, -1), dtype=np.float32)
+        top_k = min(top_k, len(self.doc_ids))
         if self._index is not None:
             scores, idx = self._index.search(q, top_k)
             scores, idx = scores[0], idx[0]

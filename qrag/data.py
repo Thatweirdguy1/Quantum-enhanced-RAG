@@ -10,8 +10,10 @@ against an approximate index's idea of it.
 from __future__ import annotations
 
 import json
+import hashlib
 from collections import defaultdict
 from dataclasses import dataclass
+from io import BytesIO
 from pathlib import Path
 
 from .config import DATA_DIR
@@ -148,6 +150,49 @@ def load_train_pairs(name: str = "scifact", root: Path | None = None
             if score > 0:
                 pairs.append((qtext[qid], str(did)))
     return pairs
+
+
+def ingest_documents(files: list[tuple[str, bytes]], *, chunk_chars: int = 1200,
+                     overlap_chars: int = 200) -> Dataset:
+    """Parse local TXT/PDF bytes into fixed, overlapping retrievable passages.
+
+    This builds a separate ephemeral corpus; benchmark judgments are never mixed
+    with uploaded material. Limits keep a malformed or huge file from exhausting
+    the demo process.
+    """
+    if not 1 <= len(files) <= 20:
+        raise ValueError("upload 1 to 20 TXT or PDF files")
+    if not 0 <= overlap_chars < chunk_chars <= 8000:
+        raise ValueError("invalid chunk size or overlap")
+    documents: list[Document] = []
+    for name, payload in files:
+        suffix = Path(name).suffix.lower()
+        if suffix not in {".txt", ".pdf"} or not payload or len(payload) > 10 * 1024 * 1024:
+            raise ValueError(f"{name}: expected a nonempty TXT/PDF of at most 10 MB")
+        if suffix == ".txt":
+            text = payload.decode("utf-8-sig")
+        else:
+            from pypdf import PdfReader
+
+            reader = PdfReader(BytesIO(payload))
+            if len(reader.pages) > 100:
+                raise ValueError(f"{name}: PDF exceeds 100 pages")
+            text = "\n".join(page.extract_text() or "" for page in reader.pages)
+        text = " ".join(text.split())
+        if not text:
+            raise ValueError(f"{name}: no extractable text")
+        digest = hashlib.sha256(name.encode("utf-8") + payload).hexdigest()[:12]
+        for part, start in enumerate(range(0, len(text), chunk_chars - overlap_chars), 1):
+            chunk = text[start:start + chunk_chars]
+            if not chunk:
+                break
+            documents.append(Document(f"{digest}-{part}", f"{Path(name).name} · part {part}",
+                                      chunk))
+            if len(documents) > 2000:
+                raise ValueError("upload exceeds 2,000 passages")
+            if start + chunk_chars >= len(text):
+                break
+    return Dataset("uploaded", documents, [], {})
 
 
 if __name__ == "__main__":  # quick sanity check

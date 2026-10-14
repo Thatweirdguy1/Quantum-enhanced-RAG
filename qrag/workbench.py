@@ -20,8 +20,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import streamlit as st
 
 from qrag.config import RESULTS_DIR
-from qrag.pipeline import BaselineRAG, QRAG
-from qrag.runtime import load_runtime
+from qrag.data import ingest_documents
+from qrag.pipeline import BaselineRAG, QRAG, build_indexes
+from qrag.runtime import Runtime, load_runtime
 from qrag.security import injection_risk, validate_query
 
 
@@ -64,6 +65,14 @@ def pipeline_for(rt, mode: str):
     return QRAG(rt.dataset, base.dense, base.bm25, {}, base.kernel, base.cfg,
                 use_kernel=True, use_interference=mode == "Full Q-RAG",
                 use_grover=mode == "Full Q-RAG", use_qaoa=mode == "Full Q-RAG")
+
+
+def active_runtime(corpus: str):
+    if corpus == "Uploaded files":
+        if "uploaded_runtime" not in st.session_state:
+            raise ValueError("Upload and index TXT/PDF files first")
+        return st.session_state["uploaded_runtime"]
+    return runtime()
 
 
 def run_query(rt, query: str, top_k: int, mode: str, answer: bool):
@@ -112,6 +121,28 @@ def show_hits(result, docs, *, key: str):
 
 st.sidebar.markdown("### Q-RAG")
 st.sidebar.caption("Research workbench · local simulator")
+corpus = st.sidebar.radio("Corpus", ["SciFact", "Uploaded files"])
+if corpus == "Uploaded files":
+    uploads = st.sidebar.file_uploader("TXT or PDF documents", type=["txt", "pdf"],
+                                       accept_multiple_files=True,
+                                       on_change=lambda: st.session_state.pop("uploaded_runtime", None))
+    if st.sidebar.button("Index uploaded files"):
+        try:
+            with st.spinner("Extracting and embedding passages…"):
+                dataset = ingest_documents([(item.name, item.getvalue()) for item in uploads])
+                base = runtime()
+                vectors = base.embedder.encode([doc.content for doc in dataset.documents])
+                dense, bm25 = build_indexes(dataset, vectors)
+                pipeline = QRAG(dataset, dense, bm25, {}, base.pipeline.kernel,
+                                base.pipeline.cfg)
+                st.session_state["uploaded_runtime"] = Runtime(
+                    pipeline, dataset, base.embedder, base.generator, base.judge)
+            st.sidebar.success(f"Indexed {len(dataset.documents)} passages")
+        except Exception as exc:
+            st.sidebar.error(f"Indexing failed: {exc}")
+    if "uploaded_runtime" in st.session_state:
+        st.sidebar.caption(f"{len(st.session_state['uploaded_runtime'].dataset.documents)} uploaded passages indexed in this session")
+        st.sidebar.caption("The phase kernel was trained on SciFact; quality on these files is unvalidated.")
 mode = st.sidebar.radio("Retrieval mode", ["Classical", "Kernel", "Full Q-RAG"],
                         index=2, help="The full mode includes interference, Grover and QAOA.")
 top_k = st.sidebar.slider("Results to retrieve", 1, 20, 5)
@@ -134,7 +165,7 @@ with workbench:
     if submitted:
         try:
             with st.spinner("Searching the corpus and, if selected, generating an answer…"):
-                st.session_state["run"] = (mode, query, *run_query(runtime(), query, top_k,
+                st.session_state["run"] = (mode, query, *run_query(active_runtime(corpus), query, top_k,
                                                                     mode, generate_answer))
         except Exception as exc:
             st.error(f"Run failed: {exc}")
@@ -169,7 +200,7 @@ with compare:
     if compare_now:
         try:
             with st.spinner("Running three retrieval modes…"):
-                rt = runtime()
+                rt = active_runtime(corpus)
                 text = validate_query(comparison_query)
                 vector = rt.embedder.encode([text])[0]
                 st.session_state["comparison_results"] = {
@@ -208,10 +239,10 @@ with evaluation:
         st.info(f"Full Q-RAG vs classical: ΔnDCG@10 {full['delta']:+.4f}; "
                 f"95% CI [{full['ci95_low']:+.4f}, {full['ci95_high']:+.4f}]. "
                 "The measured difference is not statistically significant.")
-        st.download_button("Download benchmark CSV", "\n".join(
-            ["system,ndcg_at_10,recall_at_10,mrr_at_10,mean_latency_ms"] +
-            [f"{r['System']},{r['nDCG@10']},{r['Recall@10']},{r['MRR@10']},{r['Mean latency ms']}" for r in rows]),
-            file_name="qrag_benchmark.csv", mime="text/csv")
+        csv_path = RESULTS_DIR / "experiment.csv"
+        if csv_path.exists():
+            st.download_button("Download per-query CSV", csv_path.read_bytes(),
+                               file_name="qrag_experiment.csv", mime="text/csv")
 
 with security:
     st.subheader("Adversarial corpus experiment")
@@ -223,7 +254,7 @@ with security:
                    "five context slots per query.")
         st.dataframe([{"System": name,
                        "Poisoned context occupancy": f"{entry['attack']['context_occupancy']:.1%}",
-                       "Clean context rate": f"{entry['attack']['clean_context_rate']:.1%}",
+                       "Top 5 poison hit rate": f"{1 - entry['attack']['clean_context_rate']:.1%}",
                        "Top 10 poison hit rate": f"{entry['attack']['top_k_hit_rate']:.1%}"}
                       for name, entry in data["poisoned"]["systems"].items()],
                      hide_index=True, width="stretch")

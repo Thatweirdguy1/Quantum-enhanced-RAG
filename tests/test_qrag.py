@@ -81,6 +81,80 @@ def test_poisoned_experiment_includes_classical_mmr_control():
     assert flags["use_qaoa"] is False
 
 
+def test_uploaded_text_is_chunked_and_small_index_does_not_pad_hits():
+    from qrag.data import ingest_documents
+    from qrag.index import DenseIndex
+
+    ds = ingest_documents([("notes.txt", b"abcdefghij")], chunk_chars=6,
+                          overlap_chars=2)
+    assert [d.text for d in ds.documents] == ["abcdef", "efghij"]
+    vectors = np.array([[1., 0.], [0., 1.]], dtype=np.float32)
+    index = DenseIndex(vectors, ds.doc_ids)
+    ids, _ = index.search(vectors[0], 10)
+    assert ids == ds.doc_ids
+    with pytest.raises(ValueError, match="TXT/PDF"):
+        ingest_documents([("script.py", b"hello")])
+
+
+def test_grover_bypasses_tiny_uploaded_corpus():
+    from qrag.config import Config
+    from qrag.data import ingest_documents
+    from qrag.pipeline import QRAG, build_indexes
+
+    ds = ingest_documents([("note.txt", b"A short research note")])
+    dense, bm25 = build_indexes(ds, np.ones((1, 2), dtype=np.float32))
+    pipeline = QRAG(ds, dense, bm25, {}, None, Config(), use_kernel=False,
+                    use_interference=False, use_grover=True, use_qaoa=False)
+    result = pipeline.retrieve("q", "research", top_k=5,
+                               query_vector=np.ones(2, dtype=np.float32))
+    assert len(result.ranked) == 1
+    assert result.trace["grover"]["skipped"] == "fewer than four candidates"
+
+
+def test_qaoa_numerical_failure_uses_topk(monkeypatch):
+    from qrag.config import Config
+    from qrag.data import ingest_documents
+    from qrag.pipeline import QRAG, build_indexes
+    from qrag.qaoa import QAOAConvergenceError
+
+    ds = ingest_documents([("note.txt", ("research evidence " * 400).encode())],
+                          chunk_chars=100, overlap_chars=0)
+    vectors = np.tile(np.array([[1., 0.]], dtype=np.float32), (len(ds.documents), 1))
+    dense, bm25 = build_indexes(ds, vectors)
+    pipeline = QRAG(ds, dense, bm25, {}, None, Config(), use_kernel=False,
+                    use_interference=False, use_grover=False, use_qaoa=True)
+    monkeypatch.setattr("qrag.pipeline.rerank_qaoa",
+                        lambda *a, **k: (_ for _ in ()).throw(
+                            QAOAConvergenceError("non-finite result")))
+    result = pipeline.retrieve("q", "research", top_k=5,
+                               query_vector=np.array([1., 0.], dtype=np.float32))
+    assert len(result.ranked) == 5
+    assert result.trace["qaoa"]["fallback"] == "greedy top-k"
+
+
+def test_experiment_csv_keeps_query_metrics_and_retrieval_trace(tmp_path):
+    import csv
+    import json
+    from scripts.export_csv import export_csv
+
+    source, target = tmp_path / "run.json", tmp_path / "run.csv"
+    source.write_text(json.dumps({
+        "provenance": {"config_hash": "abc", "seed": 7},
+        "clean": {"classical-baseline": {
+            "per_query": {"q1": {"ndcg@10": 0.5}},
+            "query_details": {"q1": {"latency_ms": 12.3,
+                                     "ranked_doc_ids": ["d1"], "scores": [0.9]}},
+        }},
+    }), encoding="utf8")
+    assert export_csv(source, target) == 1
+    with target.open(encoding="utf8", newline="") as fh:
+        row = next(csv.DictReader(fh))
+    assert row["query_id"] == "q1"
+    assert row["ndcg@10"] == "0.5"
+    assert json.loads(row["ranked_doc_ids"]) == ["d1"]
+    assert row["latency_ms"] == "12.3"
+
+
 def test_runtime_query_vectors_are_validated_and_normalised():
     from qrag.pipeline import _runtime_query_vector
 

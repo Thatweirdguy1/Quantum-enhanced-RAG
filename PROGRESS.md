@@ -2,8 +2,23 @@
 
 Resume file. If the session died, this plus the git log is enough to pick up.
 
-Updated after each deliverable is committed and pushed. Last update: 13 Oct 2026,
-after the full MMR-control rerun.
+Updated after each deliverable is committed and pushed. Last update: 14 Oct 2026,
+for the software follow-up below.
+
+## Software follow-up in progress — 14 Oct 2026
+
+- Streamlit dark workbench is pushed: live Classical / Kernel / Full modes,
+  grounded answer and independent judge, recorded evaluation and security views,
+  and ranked-passage CSV export.
+- SRS follow-up now implements session-local TXT/PDF ingestion with overlapping
+  chunks, in-memory FAISS/BM25 indexing, Grover bypass for tiny corpora, and a
+  numerical-failure QAOA fallback. The evaluation runner now records per-query
+  latency, ranks, and scores in a structured CSV. A full committed-code rerun is
+  required before updating the experiment of record and dependent documents.
+- COBYLA routinely uses its iteration budget while producing finite feasible
+  selections. The SRS wording on "failure to converge" needs revision or a
+  different stopping policy; automatically discarding those selections would
+  change the research question and its reported results.
 
 ## Historical run constraints
 

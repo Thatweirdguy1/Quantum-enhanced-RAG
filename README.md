@@ -154,7 +154,9 @@ python -m scripts.train_kernel
 **3. The experiment of record** (~35 min) — the ablation grid over all 300 SciFact
 test queries, paired bootstrap against the baseline, quantum accounting, and the
 poisoned-corpus arm. Writes `results/experiment.json`, checkpointing after every
-system so an interrupted run still leaves usable results:
+system so an interrupted run still leaves usable results. The completed run also
+writes `results/experiment.csv` with one row per query and system, including
+metrics, latency, ranked document IDs, and scores:
 
 ```bash
 python -m scripts.run_experiment
@@ -192,9 +194,20 @@ The dark workbench starts on `127.0.0.1:8501`. Evaluation and security tabs read
 `results/experiment.json` without loading models. A live query loads the SciFact
 corpus, cached embeddings and trained kernel, then uses local Ollama for query
 embedding. Enable answer generation to use `qwen3.5` and the independent
-`deepseek-r1:8b` judge. The CSV button exports the currently ranked passages.
+`deepseek-r1:8b` judge. Select **Uploaded files** to index up to 20 local TXT/PDF
+documents as overlapping passages for this session. The trained kernel comes from
+SciFact, so its behavior on uploaded material is exploratory. PDFs require
+extractable text; scanned image PDFs need OCR before upload. CSV buttons export
+the current ranked passages or the recorded per-query experiment.
 Stitch mockups in `stitch_q_rag_research_workbench/` informed the layout; all
 displayed measurements come from the actual run or recorded experiment.
+
+When a corpus has fewer than four candidates, the Grover stage is bypassed. If
+QAOA produces no finite, feasible selection, retrieval falls back to greedy
+top-k and records the reason in its trace. Reaching COBYLA's iteration budget
+with a finite feasible candidate retains the best candidate: the research run
+evaluates that bounded heuristic, so treating every budget stop as a failure
+would replace the studied QAOA arm with classical ranking.
 
 ### Optional: the demo API
 

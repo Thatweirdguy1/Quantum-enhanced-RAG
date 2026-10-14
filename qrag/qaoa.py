@@ -203,6 +203,10 @@ def rerank_exact(qubo: QUBO) -> RerankResult:
 
 
 # ------------------------------------------------------------------------ QAOA
+class QAOAConvergenceError(RuntimeError):
+    """No finite, feasible QAOA selection could be decoded."""
+
+
 def qaoa_expectation(energies: np.ndarray, n_qubits: int,
                      gammas: np.ndarray, betas: np.ndarray) -> tuple[float, Statevector]:
     r"""Prepare the QAOA ansatz and return :math:`\langle H_C \rangle`."""
@@ -240,11 +244,16 @@ def rerank_qaoa(qubo: QUBO, layers: int = 2, optimiser_iters: int = 120,
     for _restart in range(3):  # QAOA landscapes are non-convex; restart a few times
         x0 = np.concatenate([rng.uniform(0, np.pi, layers),
                              rng.uniform(0, np.pi / 2, layers)])
-        res = minimize(negated, x0, method="COBYLA",
-                       options={"maxiter": optimiser_iters})
-        if res.fun < best_value:
+        try:
+            res = minimize(negated, x0, method="COBYLA",
+                           options={"maxiter": optimiser_iters})
+        except (FloatingPointError, ValueError):
+            continue
+        if np.isfinite(res.fun) and np.isfinite(res.x).all() and res.fun < best_value:
             best_params, best_value = res.x, float(res.fun)
 
+    if best_params is None:
+        raise QAOAConvergenceError("optimiser produced no finite selection")
     gammas, betas = best_params[:layers], best_params[layers:]
     if backend == "aer":
         probs = _qaoa_probs_aer(qubo, scaled, gammas, betas)
@@ -259,6 +268,8 @@ def rerank_qaoa(qubo: QUBO, layers: int = 2, optimiser_iters: int = 120,
     cardinality = bits.sum(axis=1)
     feasible = np.flatnonzero(cardinality == qubo.k)
     feasible_mass = float(probs[feasible].sum())
+    if not np.isfinite(probs).all() or feasible_mass <= 0:
+        raise QAOAConvergenceError("QAOA produced no feasible probability mass")
     best_idx = int(feasible[np.argmax(probs[feasible])])
     selected = sorted(np.flatnonzero(bits[best_idx]).tolist())
     objective = qubo.objective(selected)

@@ -191,6 +191,7 @@ def run_system(bench: Bench, label: str, flags: dict | None, *,
     report = EvalReport(label, k_values)
     traces: list[dict] = []
     ranked_by_query: dict[str, list[str]] = {}
+    query_details: dict[str, dict] = {}
 
     t0 = time.perf_counter()
     for i, query in enumerate(bench.dataset.queries, start=1):
@@ -200,6 +201,11 @@ def run_system(bench: Bench, label: str, flags: dict | None, *,
                    latency_ms=result.latency_ms)
         traces.append(result.trace)
         ranked_by_query[query.query_id] = result.ranked
+        query_details[query.query_id] = {
+            "latency_ms": result.latency_ms,
+            "ranked_doc_ids": result.ranked,
+            "scores": [result.scores[doc_id] for doc_id in result.ranked],
+        }
         if verbose and (i % 50 == 0 or i == len(bench.dataset.queries)):
             rate = i / (time.perf_counter() - t0)
             print(f"    {label:<22} {i:>4}/{len(bench.dataset.queries)}  "
@@ -208,6 +214,7 @@ def run_system(bench: Bench, label: str, flags: dict | None, *,
     report.extras["quantum"] = _aggregate_traces(traces)
     report.extras["run_seconds"] = time.perf_counter() - t0
     report.extras["ranked"] = ranked_by_query
+    report.extras["query_details"] = query_details
     return report
 
 
@@ -271,6 +278,8 @@ def run_poison_arm(bench: Bench, embedder, args, clean_means: dict) -> dict:
         means = report.means()
         system_result = {
             "metrics_poisoned": means,
+            "per_query": report.per_query,
+            "query_details": report.extras["query_details"],
             "attack": attack,
             "context_detector": context_scan,
             "quantum": report.extras.get("quantum", {}),
@@ -466,6 +475,7 @@ def main() -> int:
         payload["clean"][label] = {
             "metrics": report.means(),
             "per_query": report.per_query,
+            "query_details": report.extras["query_details"],
             "quantum": report.extras.get("quantum", {}),
             "run_seconds": report.extras["run_seconds"],
         }
@@ -490,6 +500,17 @@ def main() -> int:
         _checkpoint(payload, args.out)
         print_poison_summary(poison)
 
+    from scripts.export_csv import export_csv
+    csv_path = (RESULTS_DIR / args.out).with_suffix(".csv")
+    print(f"exported {export_csv(RESULTS_DIR / args.out, csv_path)} per-query rows to {csv_path}")
+    # The CSV owns per-query rank/score traces; keep the JSON focused on summary
+    # metrics and clean-arm vectors needed for the paired bootstrap.
+    for block in payload["clean"].values():
+        block.pop("query_details", None)
+    for block in payload.get("poisoned", {}).get("systems", {}).values():
+        block.pop("query_details", None)
+        block.pop("per_query", None)
+    _checkpoint(payload, args.out)
     print(f"\nwrote results/{args.out}")
     print("Every table in the report is generated from this file; regenerate with "
           "the same command and the same seed to reproduce it.")

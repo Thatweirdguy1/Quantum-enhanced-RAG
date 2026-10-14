@@ -34,7 +34,8 @@ from .fusion import fuse, minmax
 from .grover import GroverShortlister
 from .index import BM25Index, DenseIndex
 from .kernel import PhaseKernel
-from .qaoa import (QUBO, rerank_exact, rerank_greedy_mmr, rerank_qaoa,
+from .qaoa import (QAOAConvergenceError, QUBO, rerank_exact, rerank_greedy_mmr,
+                   rerank_qaoa, rerank_topk,
                    selection_redundancy)
 from .security import validate_query, validate_top_k
 
@@ -208,7 +209,7 @@ class QRAG:
         # --- stage 3: Grover narrowing over the shortlist
         shortlist_n = min(qcfg.grover_shortlist, len(pool))
         short_order = np.argsort(-fused)[:shortlist_n]
-        if self.use_grover:
+        if self.use_grover and shortlist_n >= 4:
             gres = self.grover.run(fused[short_order])
             trace["grover"] = {
                 "n_qubits": gres.n_qubits,
@@ -226,6 +227,8 @@ class QRAG:
             # leaving relative order inside it driven by the fused score.
             amp_rank = [i for i in gres.ranked_indices if i < shortlist_n]
             short_order = short_order[amp_rank]
+        elif self.use_grover:
+            trace["grover"] = {"skipped": "fewer than four candidates"}
 
         # --- stage 4: QAOA reranking of the surviving head
         cand_n = min(qcfg.qaoa_candidates, len(short_order))
@@ -249,25 +252,35 @@ class QRAG:
                 }
             else:
                 exact = rerank_exact(qubo)
-                qres = rerank_qaoa(qubo, qcfg.qaoa_layers, qcfg.qaoa_optimiser_iters,
-                                   qcfg.seed, qcfg.backend, exact.objective)
-                reranked = qres
-                trace["qaoa"] = {
-                    "n_qubits": qres.n_qubits,
-                    "layers": qres.layers,
-                    "objective": qres.objective,
-                    "exact_objective": exact.objective,
-                    "solution_quality": qres.approximation_ratio,
-                    "is_optimal": qres.extras["is_optimal"],
-                    "objective_gap": qres.extras["objective_gap"],
-                    "worst_feasible_objective": qres.extras["worst_feasible_objective"],
-                    "feasible_probability": qres.feasible_probability,
-                    "optimiser_calls": qres.optimiser_iters,
-                    "wall_clock_ms": qres.wall_clock_s * 1e3,
-                    "redundancy_qaoa": selection_redundancy(qubo, qres.selected),
-                    "redundancy_topk": selection_redundancy(
-                        qubo, sorted(np.argsort(-rel)[: qcfg.qaoa_k].tolist())),
-                }
+                try:
+                    qres = rerank_qaoa(qubo, qcfg.qaoa_layers,
+                                       qcfg.qaoa_optimiser_iters,
+                                       qcfg.seed, qcfg.backend, exact.objective)
+                except QAOAConvergenceError as exc:
+                    import logging
+
+                    logging.getLogger(__name__).warning("QAOA fallback: %s", exc)
+                    qres = None
+                    reranked = rerank_topk(qubo)
+                    trace["qaoa"] = {"fallback": "greedy top-k", "reason": str(exc)}
+                if qres is not None:
+                    reranked = qres
+                    trace["qaoa"] = {
+                        "n_qubits": qres.n_qubits,
+                        "layers": qres.layers,
+                        "objective": qres.objective,
+                        "exact_objective": exact.objective,
+                        "solution_quality": qres.approximation_ratio,
+                        "is_optimal": qres.extras["is_optimal"],
+                        "objective_gap": qres.extras["objective_gap"],
+                        "worst_feasible_objective": qres.extras["worst_feasible_objective"],
+                        "feasible_probability": qres.feasible_probability,
+                        "optimiser_calls": qres.optimiser_iters,
+                        "wall_clock_ms": qres.wall_clock_s * 1e3,
+                        "redundancy_qaoa": selection_redundancy(qubo, qres.selected),
+                        "redundancy_topk": selection_redundancy(
+                            qubo, sorted(np.argsort(-rel)[: qcfg.qaoa_k].tolist())),
+                    }
             selected = [int(head[i]) for i in reranked.selected]
             selected.sort(key=lambda i: -fused[i])
             tail = [int(i) for i in short_order if int(i) not in set(selected)]
