@@ -21,7 +21,7 @@ The tested archive, automated checks, and CI passed. A subsequent live Streamlit
 | **GitHub Actions CI (`ci.yml`)** | Commit `6899d36` clean | Run #8: `completed`, conclusion: `success` (Ubuntu & Windows) | **PASS** |
 | **GitHub CodeQL Analysis** | Extended scanning clean | Run #26: `completed`, conclusion: `success` (0 open alerts) | **PASS** |
 | **License Alignment (Tracked)** | PolyForm Noncommercial 1.0.0 | Verified in `LICENSE`, `README.md`, `docs/research_paper.md`, `deliverables/` | **PASS** |
-| **Streamlit Modes & Features** | Workbench, Ingestion, Fallbacks | Live SciFact Full Q-RAG retrieval, three-mode comparison, generation, and separate-model judge passed; upload path was not exercised | **PARTIAL** |
+| **Streamlit Modes & Features** | Workbench, Ingestion, Fallbacks | Live SciFact Full Q-RAG retrieval, three-mode comparison, generation, separate-model judge, and ranked CSV export passed; upload path was not exercised | **PARTIAL** |
 | **Deliverables & PDF Previews** | Document integrity & page counts | PDF page counts: Paper 27, Lit Review 39, Diary 9; human visual review not recorded | **PARTIAL** |
 | **Stitch Mockup Licensing** | Must not claim MIT if published | Line 495 of untracked `about_methodology/code.html` claims MIT | **DEFECT (Low)** |
 
@@ -146,7 +146,7 @@ Generated deliverables were checked for text and structure. PDF page counts are 
 
 ## 7. Subsequent live workbench smoke test (15 October 2026)
 
-Streamlit launched on `127.0.0.1:8501` with installed `bge-m3:latest`, `qwen3.5:latest`, and `deepseek-r1:8b` Ollama models. In the browser, the SciFact question “Does vitamin D supplementation reduce mortality?” returned five ranked passages in Full Q-RAG mode (9,532.0 ms retrieval time, 98 candidates). The Compare modes action completed and displayed its results table. With “Generate and judge answer” enabled, the same question produced a cited answer and an independent judge result (relevance 0.90, grounded: yes). Generation took substantially longer than retrieval. TXT/PDF upload, its fallback behavior, and the CSV download interaction were not exercised in this smoke test.
+Streamlit launched on `127.0.0.1:8501` with installed `bge-m3:latest`, `qwen3.5:latest`, and `deepseek-r1:8b` Ollama models. In the browser, the SciFact question “Does vitamin D supplementation reduce mortality?” returned five ranked passages in Full Q-RAG mode (9,532.0 ms retrieval time, 98 candidates). The Compare modes action completed and displayed its results table. With “Generate and judge answer” enabled, the same question produced a cited answer and an independent judge result (relevance 0.90, grounded: yes). Generation took substantially longer than retrieval. The user subsequently supplied the manually downloaded `qrag_retrieval.csv`; it contains the expected six columns and five ranked rows, with nonempty passages and the same five titles and scores shown in the UI. TXT/PDF upload and its fallback behavior were not exercised in this smoke test.
 
 ## 8. Prioritized Defect Register
 
@@ -161,4 +161,4 @@ Streamlit launched on `127.0.0.1:8501` with installed `bge-m3:latest`, `qwen3.5:
 
 ## 9. Final Recommendation
 
-The automated test, security, CI, archive, and live SciFact workbench checks pass. Before calling the complete project submission-ready, inspect the final document pages, TOCs, and logos visually; an upload/CSV interaction check is also advisable. Do not include the untracked Stitch mockup without correcting its license claim.
+The automated test, security, CI, archive, live SciFact workbench, and ranked CSV export checks pass. Before calling the complete project submission-ready, inspect the final document pages, TOCs, and logos visually; an upload/fallback check is also advisable. Do not include the untracked Stitch mockup without correcting its license claim.
